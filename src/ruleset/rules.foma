@@ -3,6 +3,7 @@ source functions.foma
 
 #3.1: remove silent stuff
 define RemoveSilent         WithAnt("\si", ?*) -> 0;
+define Phase31 RemoveSilent;
 
 #3.2: Separate segments with spaces /stress symbols
 define StressT(S)               " " S " ";
@@ -14,9 +15,9 @@ define SplitLeftSecondaryStress EAnt("\selr") -> StressT("<<-");
 define SplitRightSecondaryStress EAnt("\serl") -> StressT("->>");
 
 #Wire it together in parallel
-define SplitSegments            TransformApostrophe ,, SplitUnstressed ,, SplitLeftPrimaryStress
-                                ,, SplitRightPrimaryStress ,, SplitLeftSecondaryStress ,, SplitRightSecondaryStress;
-
+define SplitSegments            TransformApostrophe .o. [SplitUnstressed .o. SplitLeftPrimaryStress
+                                .o. SplitRightPrimaryStress .o. SplitLeftSecondaryStress .o. SplitRightSecondaryStress];
+define Phase32 SplitSegments;
 
 #3.3: Apply critical digraphs
 #first: ng -> \co{n} if not followed by l or r
@@ -31,3 +32,41 @@ define NgReplace4   "n" WithAnt("\co", "g") -> WithAnt("\co", "n") WithAnt("\co"
 
 #Order is important here, NgReplace3 traps cases that fall through NgReplace2
 define NgReplace NgReplace1 .o. NgReplace2 .o. NgReplace3 .o. NgReplace4;
+
+#OK, let's do gh
+#gh is silent everywhere
+define GhReplace1   "g" "h"     -> 0 || NotInAntL _;
+#\opq{gh} says should be schwa, but Jose reckons try a
+define GhReplace2   WithAnt("\opq", "g" "h") -> "a";
+define GhReplace GhReplace1 .o. GhReplace2;
+
+#wh:
+#wh becomes \co{w} at begining of seg or when followed by consonant
+define WhReplace1   "w" "h" @-> WithAnt("\co", "w") || SegBoundary _;
+define WhReplace2   "w" "h" @-> WithAnt("\co", "w") || AnyAntL(EarlyConsonant) _ NotInAntR; #left is used for the consonant, so verify no trailing }
+define WhReplace WhReplace1 ,, WhReplace2;
+
+#wr:
+#wr becomes r except after vowel
+#Since we have a not rule rather than a yes rule, need to consider end-of-segment
+define WrReplace    "w" "r" -> "r" || [\AnyAntL(EarlyVowel) | SegBoundary] _ NotInAntR;
+
+#qu -> kw before aeiouy
+define QuReplace    "q" "u" -> "k" "w" || NotInAntL _ AnyAntR([EarlyVowel | "y"]);
+
+#gu:
+#gu -> \co{g}w before aou
+#I imply that \co{g}u should also be included here
+define GuReplace1   ["g"|WithAnt("\co", "g")]  "u" @-> WithAnt("\co", "g") "w" || NotInAntL _ AnyAntR(["a"|"o"|"u"]);
+#gu -> \co{g} before eiy
+define GuReplace2   ["g"|WithAnt("\co", "g")] "u" @-> WithAnt("\co", "g") || NotInAntL _ AnyAntR(["e"|"i"|"y"]);
+
+define GuReplace GuReplace1 ,, GuReplace2;
+
+#ah etc
+#h is silent between a vowel and a consonant
+define AhReplace    "h" -> 0 || AnyAntL([EarlyVowel|"y"|"w"]) _ AnyAntR(EarlyConsonant);
+
+#wire everything up together!
+define Phase33 NgReplace .o. GhReplace .o. WhReplace .o. WrReplace .o. QuReplace .o. GuReplace .o. AhReplace;
+
