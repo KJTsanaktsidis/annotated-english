@@ -28,3 +28,6 @@
 *.toc
 *.run.xml
 *-blx.bib
+
+#vim
+*.swp

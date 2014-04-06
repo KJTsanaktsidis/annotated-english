@@ -1,0 +1,20 @@
+#This file contains helper functions
+
+define SegBoundary [" " | .#.]; #Segments end on a space (or the end of input)
+
+define Ant ["\si"|"\st"|"\stst"|"\sel"|"\ser"|"\selr"|"\serl"|"\se"|"\sch"|"\pln"|"\nat"|
+            "\brd"|"\clr"|"\ctr"|"\iot"|"\rnd"|"\opq"|"\idp"|"\udp"|"\w"|"\y"|"\co"|"\vo"|
+            "\no"|"\svo"|"\sno"|"\hvo"|"\hno"]; #All possible annotations after preprocessing
+
+define WithAnt(AN, X)   [AN "{" X "}"]; #only X with annotation AN applied
+define EAnt(AN)         WithAnt(AN, 0); #Empty annotation AN
+define AnyAnt(X)        [WithAnt(Ant, X) | X]; #X with any annotation applied
+define AnyAntL(X)       [X ("}")]; #X possibly with an annotation on the left
+define AnyAntR(X)       [([Ant "{"]) X]; #X possibly with an annotation on the right
+define NotInAntL        ["}" | SegBoundary] [\Ant]*; #on LHS of match, ensures that we're not matching within an annotation
+define NotInAntR        [\"}"]* [Ant | SegBoundary]; #on RHS of match, ensures that we're not matching within an annotation
+
+#Consonants and vowels, before determination of y/w
+define EarlyConsonant   [b|c|d|f|g|h|j|k|l|m|n|p|q|r|s|t|v|w|x|y|z];
+define EarlyVowel       [a|e|i|o|u];
+

@@ -1,0 +1,33 @@
+#The transducer rules!
+source functions.foma
+
+#3.1: remove silent stuff
+define RemoveSilent         WithAnt("\si", ?*) -> 0;
+
+#3.2: Separate segments with spaces /stress symbols
+define StressT(S)               " " S " ";
+define TransformApostrophe      "'" -> "-" || _ \AnyAntR(r);
+define SplitUnstressed          ["-" | EAnt("\se")] -> StressT("-");
+define SplitLeftPrimaryStress   EAnt("\sel") -> StressT("<-");
+define SplitRightPrimaryStress  EAnt("\ser") -> StressT("->");
+define SplitLeftSecondaryStress EAnt("\selr") -> StressT("<<-");
+define SplitRightSecondaryStress EAnt("\serl") -> StressT("->>");
+
+#Wire it together in parallel
+define SplitSegments            TransformApostrophe ,, SplitUnstressed ,, SplitLeftPrimaryStress
+                                ,, SplitRightPrimaryStress ,, SplitLeftSecondaryStress ,, SplitRightSecondaryStress;
+
+
+#3.3: Apply critical digraphs
+#first: ng -> \co{n} if not followed by l or r
+define NgReplace1   "n" "g"     -> WithAnt("\co", "n")  || NotInAntL _ [SegBoundary | AnyAntR([EarlyConsonant & \"l" & \"r"])];
+#next: ng -> nj if followed by e, i or y
+define NgReplace2   "n" "g"     -> "n" "j"              || NotInAntL _ AnyAntR(["e"|"i"|"y"]);
+#next: ng -> \co{ng} in all other cases
+define NgReplace3   "n" "g"     -> WithAnt("\co", "n") WithAnt("\co", "g") || NotInAntL _;
+#when ng is n\co{g}, alwyas \co{n} \co{g}.
+#Don't need to check for being in an annotation cos that would imply a nested annotation
+define NgReplace4   "n" WithAnt("\co", "g") -> WithAnt("\co", "n") WithAnt("\co", "g");
+
+#Order is important here, NgReplace3 traps cases that fall through NgReplace2
+define NgReplace NgReplace1 .o. NgReplace2 .o. NgReplace3 .o. NgReplace4;
