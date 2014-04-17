@@ -1,8 +1,7 @@
 #This file contains helper functions
 
-define SegBoundary [" " | .#.]; #Segments end on a space (or the end of input)
-define GroupBoundaryIns ",";
-define GroupBoundary [GroupBoundaryIns | SegBoundary];
+define SegBoundary [[" " | .#.] (["@"|"#"])]; #Segments end on a space (or the end of input)
+define GroupBoundary [",@" | ",#" | SegBoundary];
 
 define VowelAnt ["\pln"|"\nat"|"\brd"|"\clr"|"\ctr"|"\iot"|"\rnd"|"\opq"|"\idp"|"\udp"];
 define ConsonantAnt ["\co"|"\vo"|"\no"|"\svo"|"\sno"|"\hvo"|"\hno"|"\w"|"\y"];
@@ -18,8 +17,8 @@ define EAnt(AN)         WithAnt(AN, 0); #Empty annotation AN
 define AnyAnt(X)        [WithAnt(Ant, X) | X]; #X with any annotation applied
 define AnyAntL(X)       [X ("}")]; #X possibly with an annotation on the left
 define AnyAntR(X)       [([Ant (StressMarker) "{"]) X]; #X possibly with an annotation on the right
-define NotInAntL        ["}" | SegBoundary] [\Ant & \StressMarker]*; #on LHS of match, ensures that we're not matching within an annotation
-define NotInAntR        [\"}"]* [Ant | StressMarker | SegBoundary]; #on RHS of match, ensures that we're not matching within an annotation
+define NotInAntL        ["}" | GroupBoundary] [\Ant & \StressMarker]*; #on LHS of match, ensures that we're not matching within an annotation
+define NotInAntR        [\"}"]* [Ant | StressMarker | GroupBoundary]; #on RHS of match, ensures that we're not matching within an annotation
 
 #this guy is needed because WithAnt() on RHS of replace rule creates ambiguity
 define WithAntR(AN, X)  [AN "{" X "}"];

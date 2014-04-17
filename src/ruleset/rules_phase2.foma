@@ -1,5 +1,3 @@
-
-
 #Section 3.4: Indentify consonant groups
 #Vowels are:
 #   Unannotated aeiou
@@ -23,36 +21,61 @@ define VowelLetter      ["a"|"e"|"i"|"o"|"u"];
 define VowelWithAnt     WithAnt(VowelAnt, ?*);
 
 define ConsonantLetter  ["b"|"c"|"d"|"f"|"g"|"h"|"j"|"k"|"l"|"m"|"n"|"p"|"q"|"r"|"s"|"t"|"v"|"x"|"z"];
-define ConsonantWithAnt WithAnt(ConsonantAnt, ?*);
+define ConsonantWithAnt WithAnt(ConsonantAnt, [\"}"]*);
 
 define PreGroupVowel    [VowelLetter | VowelWithAnt];
 define PreGroupConsonant [ConsonantLetter | ConsonantWithAnt];
 
 #apply @# transforms
-define WYBeforeCons     ["w"|"y"] -> ... "@" || NotInAntL _ PreGroupConsonant;
-define WYBeforeSegEnd   ["w"|"y"] -> ... "@" || NotInAntL _ SegBoundary;
-define WYVowelDigraph   ["w"|"y"] -> ... "@" || NotInAntL ["a"|"e"|"o"] _ \["@"|"#"];
+define WYBeforeCons     ["w"|"y"] -> ... "!@" || NotInAntL _ PreGroupConsonant;
+define WYBeforeSegEnd   ["w"|"y"] -> ... "!@" || NotInAntL _ SegBoundary;
+define WYVowelDigraph   ["w"|"y"] -> ... "!@" || NotInAntL ["a"|"e"|"o"] _ \["!@"|"!#"];
 #y is also a vowel after a consonant
-define YAfterConsonant  "y" -> ... "@" || NotInAntL PreGroupConsonant _;
-define WYConsonant      ["w"|"y"] -> ... "#" || NotInAntL _ \"@";
+define YAfterConsonant  "y" -> ... "!@" || NotInAntL PreGroupConsonant _;
+define WYConsonant      ["w"|"y"] -> ... "!#" || NotInAntL _ \"!@";
 define WYMarkerTrans    WYBeforeCons .o. WYBeforeSegEnd .o. WYVowelDigraph .o. YAfterConsonant .o. WYConsonant;
-define UMarkQU          "q" "u" -> ... "#" || NotInAntL _;
-define UMarkGUA         "g" "u" "a" -> "g" "u" "#" "a" || NotInAntL _;
-define UMarkGUO         "g" "u" "o" -> "g" "u" "#" "o" || NotInAntL _;
-define UMarkGUU         "g" "u" "u" -> "g" "u" "#" "u" "#" || NotInAntL _;
-define UMarkVowel       "u" -> ... "@" || NotInAntL _;
+define UMarkQU          "q" "u" -> ... "!#" || NotInAntL _;
+define UMarkGUA         "g" "u" "a" -> "g" "u" "!#" "a" || NotInAntL _;
+define UMarkGUO         "g" "u" "o" -> "g" "u" "!#" "o" || NotInAntL _;
+define UMarkGUU         "g" "u" "u" -> "g" "u" "!#" "u" "!#" || NotInAntL _;
+define UMarkVowel       "u" -> ... "!@" || NotInAntL _;
 define UMarkerTrans     UMarkQU .o. UMarkGUA .o. UMarkGUU .o. UMarkGUO .o. UMarkVowel;
 define MarkerAdd        WYMarkerTrans .o. UMarkerTrans;
 
 #now remove U from this group, it is usually vowel annotated
 define VowelLetter2     ["a"|"e"|"i"|"o"];
 
-define VowelGroup       [VowelLetter2 | ? "@" | VowelWithAnt]+;
-define ConsonantGroup   [ConsonantLetter | ? "#" | ConsonantWithAnt]+;
+define VowelGroup       [VowelLetter2 | ? "!@" | VowelWithAnt]+;
+define ConsonantGroup   [ConsonantLetter | ? "!#" | ConsonantWithAnt]+;
 
-define GroupUnitsInit   [..] @-> GroupBoundaryIns || ConsonantGroup _ VowelGroup, VowelGroup _ ConsonantGroup;
+define GroupUnitsMarkV  [..] @-> ",@" || ConsonantGroup _ VowelGroup;
+define GroupUnitsMarkC  [..] @-> ",#" || VowelGroup _ ConsonantGroup;
+define GroupUnitsMarkFirstV [..] @-> "@" || SegBoundary _ VowelGroup;
+define GroupUnitsMarkFirstC [..] @-> "#" || SegBoundary _ ConsonantGroup;
+
+define GroupUnits [GroupUnitsMarkV .o.  GroupUnitsMarkC] .o. [GroupUnitsMarkFirstV .o. GroupUnitsMarkFirstC];
+
 #Now let's undo some damage (easier than avoiding in the first place)
 #We put commas in annotations, this is bad
 define UndoGroupingsInAnt GroupBoundaryIns @> 0 || "{" [\"}"]* _ ?* "}";
-define UndoMarkerAdd    ["@"|"#"] -> 0;
-define Phase34 MarkerAdd .o. GroupUnitsInit .o. UndoMarkerAdd .o. UndoGroupingsInAnt;
+define UndoMarkerAdd    ["!@"|"!#"] -> 0;
+define Phase34 MarkerAdd .o. GroupUnits .o. UndoMarkerAdd .o. UndoGroupingsInAnt;
+
+
+#Section 3.5: Identify vowel digraphs/units
+#Match l-r pairs for digraphs and break them
+#These rules actually all need to run at the same priority to work
+
+define AllowedDigraphs ["a" "a" | "a" "e" | "a" "i" | "a" "y" | "a" "u" | "a" "w" | "e" "a" | "e" "e" |
+                        "e" "i" | "e" "y" | "e" "u" | "e" "w" | "o" "a" | "o" "i" | "o" "y" | "o" "u" | "o" "w"];
+
+define SepGroupDigraph  AllowedDigraphs @-> ... GroupBoundaryIns || NotInAntL _ \GroupBoundary; #ne double comma pas
+define SepGroupA        "a" @-> ... GroupBoundaryIns || NotInAntL _ "o";
+define SepGroupE        "e" @-> ... GroupBoundaryIns || NotInAntL _ "o";
+define SepGroupI        "i" @-> ... GroupBoundaryIns || NotInAntL _ ["a"|"e"|"i"|"o"|"u"|"y"|"w"];
+define SepGroupO        "o" @-> ... GroupBoundaryIns || NotInAntL _ "e";
+define SepGroupU        "u" @-> ... GroupBoundaryIns || NotInAntL _ ["a"|"e"|"i"|"o"|"u"|"y"|"w"];
+#This rule not in the paper but i'm pretty sure no vowel digraph is formed in e.g. b,ye -> b,y,e
+define SepGroupY        ["y"|"w"] @-> ... GroupBoundaryIns || NotInAntL _ ["a"|"e"|"i"|"o"|"u"|"y"|"w"];
+
+define SepGroupAnnot    WithAnt(VowelAnt, [\"}"]*) @-> ... GroupBoundaryIns || _ \GroupBoundary;
