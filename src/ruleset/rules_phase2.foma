@@ -1,1 +1,58 @@
-source functions.foma
+
+
+#Section 3.4: Indentify consonant groups
+#Vowels are:
+#   Unannotated aeiou
+#   Anything with a vowel annotation
+#   w/y if  before a consonant
+#           at the end of a segment
+#           part of a voewl digraph ay ey oy aw ew ow
+#Consonants are:
+#   bcdfghjklmnpqrstvxz
+#   Anything with consonant annotation
+#   w/y which is not vowel
+#   u when qu gua guo guu
+
+#because we can't spread regex context => accross transducer context ||
+#we need to identify consonantness/vowelness of unannotated w, y, u
+#tack on a @ after it if is a vowel and a # if it is a consonant
+#only concerned when not in ant
+
+
+define VowelLetter      ["a"|"e"|"i"|"o"|"u"];
+define VowelWithAnt     WithAnt(VowelAnt, ?*);
+
+define ConsonantLetter  ["b"|"c"|"d"|"f"|"g"|"h"|"j"|"k"|"l"|"m"|"n"|"p"|"q"|"r"|"s"|"t"|"v"|"x"|"z"];
+define ConsonantWithAnt WithAnt(ConsonantAnt, ?*);
+
+define PreGroupVowel    [VowelLetter | VowelWithAnt];
+define PreGroupConsonant [ConsonantLetter | ConsonantWithAnt];
+
+#apply @# transforms
+define WYBeforeCons     ["w"|"y"] -> ... "@" || NotInAntL _ PreGroupConsonant;
+define WYBeforeSegEnd   ["w"|"y"] -> ... "@" || NotInAntL _ SegBoundary;
+define WYVowelDigraph   ["w"|"y"] -> ... "@" || NotInAntL ["a"|"e"|"o"] _ \["@"|"#"];
+#y is also a vowel after a consonant
+define YAfterConsonant  "y" -> ... "@" || NotInAntL PreGroupConsonant _;
+define WYConsonant      ["w"|"y"] -> ... "#" || NotInAntL _ \"@";
+define WYMarkerTrans    WYBeforeCons .o. WYBeforeSegEnd .o. WYVowelDigraph .o. YAfterConsonant .o. WYConsonant;
+define UMarkQU          "q" "u" -> ... "#" || NotInAntL _;
+define UMarkGUA         "g" "u" "a" -> "g" "u" "#" "a" || NotInAntL _;
+define UMarkGUO         "g" "u" "o" -> "g" "u" "#" "o" || NotInAntL _;
+define UMarkGUU         "g" "u" "u" -> "g" "u" "#" "u" "#" || NotInAntL _;
+define UMarkVowel       "u" -> ... "@" || NotInAntL _;
+define UMarkerTrans     UMarkQU .o. UMarkGUA .o. UMarkGUU .o. UMarkGUO .o. UMarkVowel;
+define MarkerAdd        WYMarkerTrans .o. UMarkerTrans;
+
+#now remove U from this group, it is usually vowel annotated
+define VowelLetter2     ["a"|"e"|"i"|"o"];
+
+define VowelGroup       [VowelLetter2 | ? "@" | VowelWithAnt]+;
+define ConsonantGroup   [ConsonantLetter | ? "#" | ConsonantWithAnt]+;
+
+define GroupUnitsInit   [..] @-> GroupBoundaryIns || ConsonantGroup _ VowelGroup, VowelGroup _ ConsonantGroup;
+#Now let's undo some damage (easier than avoiding in the first place)
+#We put commas in annotations, this is bad
+define UndoGroupingsInAnt GroupBoundaryIns @> 0 || "{" [\"}"]* _ ?* "}";
+define UndoMarkerAdd    ["@"|"#"] -> 0;
+define GroupUnits MarkerAdd .o. GroupUnitsInit .o. UndoMarkerAdd .o. UndoGroupingsInAnt;

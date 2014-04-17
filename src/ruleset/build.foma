@@ -1,0 +1,11 @@
+source functions.foma
+source rules_phase1.foma
+source rules_phase2.foma
+#regex [Alphabet]+;
+regex Phase31;
+regex Phase32;
+regex Phase33;
+regex GroupUnits;
+sigma
+save stack group.fst
+quit

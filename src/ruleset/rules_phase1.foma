@@ -1,8 +1,5 @@
-#The transducer rules!
-source functions.foma
-
 #3.1: remove silent stuff
-define RemoveSilent         WithAnt("\si", ?*) -> 0;
+define RemoveSilent         WithAnt("\si", [\"}"]*) -> 0; #[\"}"]* instead of ?* to not overmatch to other annotations eg \si{a}\opq{b}
 define Phase31 RemoveSilent;
 
 #3.2: Separate segments with spaces /stress symbols
@@ -21,14 +18,14 @@ define Phase32 SplitSegments;
 
 #3.3: Apply critical digraphs
 #first: ng -> \co{n} if not followed by l or r
-define NgReplace1   "n" "g"     -> WithAnt("\co", "n")  || NotInAntL _ [SegBoundary | AnyAntR([EarlyConsonant & \"l" & \"r"])];
+define NgReplace1   "n" "g"     -> WithAntR("\co", "n")  || NotInAntL _ [SegBoundary | AnyAntR([EarlyConsonant & \"l" & \"r"])];
 #next: ng -> nj if followed by e, i or y
 define NgReplace2   "n" "g"     -> "n" "j"              || NotInAntL _ AnyAntR(["e"|"i"|"y"]);
 #next: ng -> \co{ng} in all other cases
-define NgReplace3   "n" "g"     -> WithAnt("\co", "n") WithAnt("\co", "g") || NotInAntL _;
+define NgReplace3   "n" "g"     -> WithAntR("\co", "n") WithAntR("\co", "g") || NotInAntL _;
 #when ng is n\co{g}, alwyas \co{n} \co{g}.
 #Don't need to check for being in an annotation cos that would imply a nested annotation
-define NgReplace4   "n" WithAnt("\co", "g") -> WithAnt("\co", "n") WithAnt("\co", "g");
+define NgReplace4   "n" WithAnt("\co", "g") -> WithAntR("\co", "n") WithAntR("\co", "g");
 
 #Order is important here, NgReplace3 traps cases that fall through NgReplace2
 define NgReplace NgReplace1 .o. NgReplace2 .o. NgReplace3 .o. NgReplace4;
@@ -42,8 +39,8 @@ define GhReplace GhReplace1 .o. GhReplace2;
 
 #wh:
 #wh becomes \co{w} at begining of seg or when followed by consonant
-define WhReplace1   "w" "h" @-> WithAnt("\co", "w") || SegBoundary _;
-define WhReplace2   "w" "h" @-> WithAnt("\co", "w") || AnyAntL(EarlyConsonant) _ NotInAntR; #left is used for the consonant, so verify no trailing }
+define WhReplace1   "w" "h" @-> WithAntR("\co", "w") || SegBoundary _;
+define WhReplace2   "w" "h" @-> WithAntR("\co", "w") || AnyAntL(EarlyConsonant) _ NotInAntR; #left is used for the consonant, so verify no trailing }
 define WhReplace WhReplace1 ,, WhReplace2;
 
 #wr:
@@ -57,9 +54,9 @@ define QuReplace    "q" "u" -> "k" "w" || NotInAntL _ AnyAntR([EarlyVowel | "y"]
 #gu:
 #gu -> \co{g}w before aou
 #I imply that \co{g}u should also be included here
-define GuReplace1   ["g"|WithAnt("\co", "g")]  "u" @-> WithAnt("\co", "g") "w" || NotInAntL _ AnyAntR(["a"|"o"|"u"]);
+define GuReplace1   ["g"|WithAnt("\co", "g")]  "u" @-> WithAntR("\co", "g") "w" || NotInAntL _ AnyAntR(["a"|"o"|"u"]);
 #gu -> \co{g} before eiy
-define GuReplace2   ["g"|WithAnt("\co", "g")] "u" @-> WithAnt("\co", "g") || NotInAntL _ AnyAntR(["e"|"i"|"y"]);
+define GuReplace2   ["g"|WithAnt("\co", "g")] "u" @-> WithAntR("\co", "g") || NotInAntL _ AnyAntR(["e"|"i"|"y"]);
 
 define GuReplace GuReplace1 ,, GuReplace2;
 
