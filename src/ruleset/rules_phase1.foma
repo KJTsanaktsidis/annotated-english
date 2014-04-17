@@ -41,7 +41,7 @@ define GhReplace GhReplace1 .o. GhReplace2;
 #wh becomes \co{w} at begining of seg or when followed by consonant
 define WhReplace1   "w" "h" @-> WithAntR("\co", "w") || SegBoundary _;
 define WhReplace2   "w" "h" @-> WithAntR("\co", "w") || AnyAntL(EarlyConsonant) _ NotInAntR; #left is used for the consonant, so verify no trailing }
-define WhReplace WhReplace1 ,, WhReplace2;
+define WhReplace WhReplace1 .o. WhReplace2;
 
 #wr:
 #wr becomes r except after vowel
@@ -58,11 +58,11 @@ define GuReplace1   ["g"|WithAnt("\co", "g")]  "u" @-> WithAntR("\co", "g") "w" 
 #gu -> \co{g} before eiy
 define GuReplace2   ["g"|WithAnt("\co", "g")] "u" @-> WithAntR("\co", "g") || NotInAntL _ AnyAntR(["e"|"i"|"y"]);
 
-define GuReplace GuReplace1 ,, GuReplace2;
+define GuReplace GuReplace1 .o. GuReplace2;
 
 #ah etc
 #h is silent between a vowel and a consonant
-define AhReplace    "h" -> 0 || AnyAntL([EarlyVowel|"y"|"w"]) _ AnyAntR(EarlyConsonant);
+define AhReplace    "h" -> 0 || AnyAntL([EarlyVowel|"y"|"w"]) _ [AnyAntR(EarlyConsonant) | SegBoundary];
 
 #wire everything up together!
 define Phase33 NgReplace .o. GhReplace .o. WhReplace .o. WrReplace .o. QuReplace .o. GuReplace .o. AhReplace;

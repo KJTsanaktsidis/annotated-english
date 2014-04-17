@@ -18,12 +18,12 @@
 
 
 define VowelLetter      ["a"|"e"|"i"|"o"|"u"];
-define VowelWithAnt     WithAnt(VowelAnt, ?*);
+define VowelWithAnt     WithAnt(VowelAnt, [\"}"]*);
 
 define ConsonantLetter  ["b"|"c"|"d"|"f"|"g"|"h"|"j"|"k"|"l"|"m"|"n"|"p"|"q"|"r"|"s"|"t"|"v"|"x"|"z"];
 define ConsonantWithAnt WithAnt(ConsonantAnt, [\"}"]*);
 
-define PreGroupVowel    [VowelLetter | VowelWithAnt];
+define PreGroupVowel    [VowelLetter | VowelWithAnt | WithAnt(["\st"|"\stst"], ["a"|"e"|"i"|"o"|"u"]+)];
 define PreGroupConsonant [ConsonantLetter | ConsonantWithAnt];
 
 #apply @# transforms
@@ -45,7 +45,7 @@ define MarkerAdd        WYMarkerTrans .o. UMarkerTrans;
 #now remove U from this group, it is usually vowel annotated
 define VowelLetter2     ["a"|"e"|"i"|"o"];
 
-define VowelGroup       [VowelLetter2 | ? "!@" | VowelWithAnt]+;
+define VowelGroup       [VowelLetter2 | ? "!@" | VowelWithAnt | WithAnt(["\st"|"\stst"], ["a"|"e"|"i"|"o"|"u"]+)]+;
 define ConsonantGroup   [ConsonantLetter | ? "!#" | ConsonantWithAnt]+;
 
 define GroupUnitsMarkV  [..] @-> ",@" || ConsonantGroup _ VowelGroup;
@@ -57,7 +57,7 @@ define GroupUnits [GroupUnitsMarkV .o.  GroupUnitsMarkC] .o. [GroupUnitsMarkFirs
 
 #Now let's undo some damage (easier than avoiding in the first place)
 #We put commas in annotations, this is bad
-define UndoGroupingsInAnt GroupBoundaryIns @> 0 || "{" [\"}"]* _ ?* "}";
+define UndoGroupingsInAnt [",@"|",#"] @> 0 || "{" [\"}"]* _ ?* "}";
 define UndoMarkerAdd    ["!@"|"!#"] -> 0;
 define Phase34 MarkerAdd .o. GroupUnits .o. UndoMarkerAdd .o. UndoGroupingsInAnt;
 
@@ -68,14 +68,16 @@ define Phase34 MarkerAdd .o. GroupUnits .o. UndoMarkerAdd .o. UndoGroupingsInAnt
 
 define AllowedDigraphs ["a" "a" | "a" "e" | "a" "i" | "a" "y" | "a" "u" | "a" "w" | "e" "a" | "e" "e" |
                         "e" "i" | "e" "y" | "e" "u" | "e" "w" | "o" "a" | "o" "i" | "o" "y" | "o" "u" | "o" "w"];
-
-define SepGroupDigraph  AllowedDigraphs @-> ... GroupBoundaryIns || NotInAntL _ \GroupBoundary; #ne double comma pas
-define SepGroupA        "a" @-> ... GroupBoundaryIns || NotInAntL _ "o";
-define SepGroupE        "e" @-> ... GroupBoundaryIns || NotInAntL _ "o";
-define SepGroupI        "i" @-> ... GroupBoundaryIns || NotInAntL _ ["a"|"e"|"i"|"o"|"u"|"y"|"w"];
-define SepGroupO        "o" @-> ... GroupBoundaryIns || NotInAntL _ "e";
-define SepGroupU        "u" @-> ... GroupBoundaryIns || NotInAntL _ ["a"|"e"|"i"|"o"|"u"|"y"|"w"];
-#This rule not in the paper but i'm pretty sure no vowel digraph is formed in e.g. b,ye -> b,y,e
-define SepGroupY        ["y"|"w"] @-> ... GroupBoundaryIns || NotInAntL _ ["a"|"e"|"i"|"o"|"u"|"y"|"w"];
-
-define SepGroupAnnot    WithAnt(VowelAnt, [\"}"]*) @-> ... GroupBoundaryIns || _ \GroupBoundary;
+define VowelOrStress WithAnt([VowelAnt|"\st"|"\stst"], [\"}"]*);
+#for some reason foma/xfst is incredibly stupid. A ,, B doesn't do what one would expect
+#if they're defined elsewhere. You actually need to literally include them like so
+define Phase35 AllowedDigraphs @> ... ",@" // VowelUnitStartL _ \UnitBoundary #ne double comma pas
+    ,,  "a" @> ... ",@" // VowelUnitStartL _ ["o"|VowelOrStress]
+    ,,  "e" @> ... ",@" // VowelUnitStartL _ ["o"|VowelOrStress]
+    ,,  "i" @> ... ",@" // VowelUnitStartL _ ["a"|"e"|"i"|"o"|"u"|"y"|"w"|VowelOrStress]
+    ,,  "o" @> ... ",@" // VowelUnitStartL _ ["e"|VowelOrStress]
+    ,,  "u" @> ... ",@" // VowelUnitStartL _ ["a"|"e"|"i"|"o"|"u"|"y"|"w"|VowelOrStress]
+    #This rule not in the paper but i'm pretty sure no vowel digraph is formed in e.g. b,ye -> b,y,e
+    ,,  ["y"|"w"] @> ... ",@" // VowelUnitStartL _ ["a"|"e"|"i"|"o"|"u"|"y"|"w"|VowelOrStress]
+    ,,  WithAnt(VowelAnt, [\"}"]*) @> ... ",@" // VowelUnitStartL _ \GroupBoundary;
+    

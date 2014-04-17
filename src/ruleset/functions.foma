@@ -2,6 +2,9 @@
 
 define SegBoundary [[" " | .#.] (["@"|"#"])]; #Segments end on a space (or the end of input)
 define GroupBoundary [",@" | ",#" | SegBoundary];
+define UnitBoundary GroupBoundary;
+define VowelUnitStartL [",@"|"@"];
+define ConsUnitStartL [",#"|"#"];
 
 define VowelAnt ["\pln"|"\nat"|"\brd"|"\clr"|"\ctr"|"\iot"|"\rnd"|"\opq"|"\idp"|"\udp"];
 define ConsonantAnt ["\co"|"\vo"|"\no"|"\svo"|"\sno"|"\hvo"|"\hno"|"\w"|"\y"];
