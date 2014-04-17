@@ -5,7 +5,7 @@ source rules_phase2.foma
 regex Phase31;
 regex Phase32;
 regex Phase33;
-regex GroupUnits;
-sigma
+regex Phase34;
 save stack group.fst
+sigma
 quit
