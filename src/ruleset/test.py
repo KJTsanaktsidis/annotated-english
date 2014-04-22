@@ -42,7 +42,7 @@ phase35_testcases = {
     r'higher' : r'#h,@i,@e,#r',
     r'a\ser{}way' : r'@a -> #w,@ay',
     r'flowing' : r'#fl,@ow,@i,#\co{n}',
-    r'see-ing' : r'#s,@ee - @i,#\co{n}',
+    r'see-ing' : r'#s,@ee <- @i,#\co{n}',
     r'lion' : r'#l,@i,@o,#n',
     r'hallow\st{e}en' : r'#h,@a,#ll,@ow,@\st{e}e,#n',
     r'me\udp${ow}' : r'#m,@e,@\udp${ow}',

@@ -7,9 +7,9 @@ define VowelUnitStartL [",@"|"@"];
 define ConsUnitStartL [",#"|"#"];
 
 define VowelAnt ["\pln"|"\nat"|"\brd"|"\clr"|"\ctr"|"\iot"|"\rnd"|"\opq"|"\idp"|"\udp"];
-define ConsonantAnt ["\co"|"\vo"|"\no"|"\svo"|"\sno"|"\hvo"|"\hno"|"\w"|"\y"];
+define ConsonantAnt ["\co"|"\vo"|"\no"|"\svo"|"\sno"|"\hvo"|"\hno"|"\w"|"\y"|"\sch"]; #I think sch should be a consonant ant because it makes consonant sequences make sense e.g. "ism" -> "is-e-m"
 
-define Ant ["\si"|"\st"|"\stst"|"\sel"|"\ser"|"\selr"|"\serl"|"\se"|"\sch"|VowelAnt|ConsonantAnt]; #All possible annotations after preprocessing
+define Ant ["\si"|"\st"|"\stst"|"\sel"|"\ser"|"\selr"|"\serl"|"\se"|VowelAnt|ConsonantAnt]; #All possible annotations after preprocessing
 
 #Recall that we have transformed nested annotations for stresses to the following
 #\brd{\st{a}} -> \brd${a}, \brd{\stst{a}} -> \brd$${a}

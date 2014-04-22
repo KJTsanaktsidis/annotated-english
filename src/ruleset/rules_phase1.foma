@@ -3,16 +3,20 @@ define RemoveSilent         WithAnt("\si", [\"}"]*) -> 0; #[\"}"]* instead of ?*
 define Phase31 RemoveSilent;
 
 #3.2: Separate segments with spaces /stress symbols
+#Some of these stress markers come from rules in 3.6
 define StressT(S)               " " S " ";
-define TransformApostrophe      "'" -> "-" || _ \AnyAntR(r);
-define SplitUnstressed          ["-" | EAnt("\se")] -> StressT("-");
-define SplitLeftPrimaryStress   EAnt("\sel") -> StressT("<-");
-define SplitRightPrimaryStress  EAnt("\ser") -> StressT("->");
-define SplitLeftSecondaryStress EAnt("\selr") -> StressT("<<-");
-define SplitRightSecondaryStress EAnt("\serl") -> StressT("->>");
+define TransformApostrophe      "'" -> "-" || _ \AnyAntR(r) .o. "'" -> 0; #If it's before an r, ' shouldn't seperate segs
+define TransformHyphen          "-" -> "\sel" "{" "}" || NotInAntL _;
+define SegSepAnt(AN)            [EAnt(AN) | WithAnt(AN, ["-"|"'"])];
+
+define SplitUnstressed          SegSepAnt("\se")  -> StressT("-");
+define SplitLeftPrimaryStress   SegSepAnt("\sel") -> StressT("<-") || NotInAntL _;
+define SplitRightPrimaryStress  SegSepAnt("\ser") -> StressT("->");
+define SplitLeftSecondaryStress SegSepAnt("\selr") -> StressT("<<-");
+define SplitRightSecondaryStress SegSepAnt("\serl") -> StressT("->>");
 
 #Wire it together in parallel
-define SplitSegments            TransformApostrophe .o. [SplitUnstressed .o. SplitLeftPrimaryStress
+define SplitSegments            TransformApostrophe .o. TransformHyphen .o. [SplitUnstressed .o. SplitLeftPrimaryStress
                                 .o. SplitRightPrimaryStress .o. SplitLeftSecondaryStress .o. SplitRightSecondaryStress];
 define Phase32 SplitSegments;
 
