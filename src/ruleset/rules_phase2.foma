@@ -81,3 +81,43 @@ define Phase35 AllowedDigraphs @> ... ",@" // VowelUnitStartL _ \UnitBoundary #n
     ,,  ["y"|"w"] @> ... ",@" // VowelUnitStartL _ ["a"|"e"|"i"|"o"|"u"|"y"|"w"|VowelOrStress]
     ,,  WithAnt(VowelAnt, [\"}"]*) @> ... ",@" // VowelUnitStartL _ \GroupBoundary;
     
+
+#Now we need to mark stresses.
+#Section 3.6
+define AssignPrimaryStAnt   [..] -> "'" || VowelUnitStartL _ [\UnitBoundary & $["\st" | "$"]]+ UnitBoundary;
+define AssignSecondStAnt    [..] -> "''" || VowelUnitStartL _ [\UnitBoundary & $["\stst" | "$$"]]+ UnitBoundary;
+define AssignStressAnts     AssignPrimaryStAnt .o. AssignSecondStAnt;
+#There seems to be no easy way to do this in one pass
+#Mark L/R of all stress annotations with !! then delete them i.e. a\st{bc}d -> a\st{!!bc!!}d -> abcd
+define MarkStressAntDel     [\UnitBoundary]+ -> "!!" ... "!!" || ["\st"|"\stst"] "{" _ "}";
+define DelMarkedStressAntOpen   ["\st"|"\stst"] "{" "!!" -> 0;
+define DelMarkedStressAntClose  "!!" "}" -> 0;
+define DelJoinedStressAnt       ["$"|"$$"] -> 0;
+define DelStressAnt             MarkStressAntDel .o. DelMarkedStressAntOpen .o. DelMarkedStressAntClose .o. DelJoinedStressAnt;
+
+#OK, now annotations are taken care of by having marked the ,# -> ,#'' type stress markers
+#We assume a secondary stress two sylables to the left of a primary stress
+#IFF there is not already a secondary stress annotation in segment
+define InsSecondSt2Left     [..] -> "''" || SegBoundary [\"''"]* VowelUnitL _ [\"''" & \VowelUnitL]* VowelUnitL [\"''" & \VowelUnitL]* VowelUnitL "'" [\"''"]* SegBoundary;
+
+#infer primary stress before these annotations
+define InsPrimaryConsAnt    [..] -> "'" || SegBoundary [\SegBoundary & \"'"]* [VowelUnitL & \[$."'"] & \[$."''"]]  _ [\VowelUnitL & \ConsUnitL]* ConsUnitL 
+                                            [\VowelUnitL & \ConsUnitL]* ["\hvo"|"\hno"|"\svo"|"\sno"] [\SegBoundary & \"'"]* SegBoundary;
+
+#Insert a "separator" to make single-sylables stressed
+define InsInitSeparator     [..] -> "->" " "|| .#. _ [\SegBoundary]* .#.;
+#Now use the segment stresses to stress the first unit in a segment unless something has already been done
+define LPrimarySegStress    [..] -> "'" || SegBoundary [\VowelUnitStartL & \SegBoundary]* VowelUnitStartL _ [\SegBoundary & \"'"]* SegBoundary " " ["<-"|"<<-"];
+define RPrimarySegStress    [..] -> "'" || ["->"|"->>"] " " [\VowelUnitStartL & \SegBoundary]* VowelUnitStartL _ [\SegBoundary & \"'"]* SegBoundary;
+define LSecondSegStress     [..] -> "''" || SegBoundary [\VowelUnitStartL & \SegBoundary]* VowelUnitStartL _ [\SegBoundary & \"''"]* SegBoundary " " "->>";
+define RSecondSegStress     [..] -> "'" || "<<-" " " [\VowelUnitStartL & \SegBoundary]* VowelUnitStartL _ [\SegBoundary & \"''"]* SegBoundary;
+define SegmentStresses LPrimarySegStress .o. RPrimarySegStress .o. LSecondSegStress .o. RSecondSegStress;
+
+define DeleteSegmentMarkers [" "|"->"|"<-"|"-"|"->>"|"<<-"] -> 0;
+
+
+#If we dont' split this up we end up with a 64MB FSM
+define Phase36a AssignStressAnts .o. DelStressAnt;
+define Phase36b InsSecondSt2Left .o. InsPrimaryConsAnt;
+define Phase36c InsInitSeparator .o. SegmentStresses .o. DeleteSegmentMarkers;
+

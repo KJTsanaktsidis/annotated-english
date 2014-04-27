@@ -6,10 +6,13 @@ regex Phase31;
 regex Phase32;
 regex Phase33;
 regex Phase34;
-sigma
 save stack phase34.fst
 regex Phase35;
-sigma
 save stack phase35.fst
+regex Phase36a;
+regex Phase36b;
+regex Phase36c;
+save stack phase36.fst
+sigma
 save stack all.fst
 quit
