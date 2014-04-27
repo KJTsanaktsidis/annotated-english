@@ -53,6 +53,22 @@ phase35_testcases = {
     r'gluier' : r'#gl,@u,@i,@e,#r'
 }
 
+phase36_testcases = {
+    r't\pln{e}l\iot{e}v\pln{i}\svo{si}on' : r"#t,@''\pln{e},#l,@\iot{e},#v,@'\pln{i},#\svo{si},@o,#n",
+    r"out\se{}go\sel{}ing" : r"@ou,#t,#g,@'o,@i,#\co{n}",
+    r"out\sel{}go\sel{}ing" : r"@'ou,#t,#g,@'o,@i,#\co{n}",
+    r"\stst{o}utg\st{o}\se{}ing" : r"@''ou,#tg,@'o,@i,#\co{n}",
+    r"ag\st{o}" : r"@a,#g,@'o",
+    r"hou\no{s}e" : r"#h,@'ou,#\no{s},@e",
+    r"yo-yo" : r"#y,@'o,#y,@o",
+    r"ire\sel{}land" : r"@'i,#r,@e,#l,@a,#nd",
+    r"complic\stst{a}te" : r"#c,@'o,#mpl,@i,#c,@''a,#t,@e",
+    r"science" : r"#sc,@'i,@e,#nc,@e",
+    r"ma\sno{ch}\st{i}ne" : r"#m,@a,#\sno{ch},@'i,#n,@e",
+    r"ini\sno{t}ia\sno{ti}on" : r"@i,#n,@''i,#\sno{t},@i,@'a,#\sno{ti},@o,#n",
+    r"r\pln$${e}pr\iot{e}senta\sno{ti}on" : r"#r,@''\pln{e},#pr,@\iot{e},#s,@e,#nt,@'a,#\sno{ti},@o,#n"
+}
+
 def test(testcases, fst, name):
     successct = 0
     failct = 0
@@ -73,3 +89,4 @@ def test(testcases, fst, name):
 
 test(phase34_testcases, 'phase34.fst', 'Phase 3.4 Grouping')
 test(phase35_testcases, 'phase35.fst', 'Phase 3.5 Units')
+test(phase36_testcases, 'phase36.fst', 'Phase 3.6 Stress')

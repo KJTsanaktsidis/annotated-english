@@ -84,12 +84,12 @@ define Phase35 AllowedDigraphs @> ... ",@" // VowelUnitStartL _ \UnitBoundary #n
 
 #Now we need to mark stresses.
 #Section 3.6
-define AssignPrimaryStAnt   [..] -> "'" || VowelUnitStartL _ [\UnitBoundary & $["\st" | "$"]]+ UnitBoundary;
-define AssignSecondStAnt    [..] -> "''" || VowelUnitStartL _ [\UnitBoundary & $["\stst" | "$$"]]+ UnitBoundary;
+define AssignPrimaryStAnt   [..] -> "'" || VowelUnitStartL _ [[\UnitBoundaryHard]+ & [$"\st" | $"$"]] UnitBoundaryHard;
+define AssignSecondStAnt    [..] -> "''" || VowelUnitStartL _ [[\UnitBoundaryHard]+ & [$"\stst" | $"$$"]] UnitBoundaryHard;
 define AssignStressAnts     AssignPrimaryStAnt .o. AssignSecondStAnt;
 #There seems to be no easy way to do this in one pass
 #Mark L/R of all stress annotations with !! then delete them i.e. a\st{bc}d -> a\st{!!bc!!}d -> abcd
-define MarkStressAntDel     [\UnitBoundary]+ -> "!!" ... "!!" || ["\st"|"\stst"] "{" _ "}";
+define MarkStressAntDel     [\UnitBoundaryHard & \"}"]+ -> "!!" ... "!!" || ["\st"|"\stst"] "{" _ "}";
 define DelMarkedStressAntOpen   ["\st"|"\stst"] "{" "!!" -> 0;
 define DelMarkedStressAntClose  "!!" "}" -> 0;
 define DelJoinedStressAnt       ["$"|"$$"] -> 0;
@@ -98,26 +98,28 @@ define DelStressAnt             MarkStressAntDel .o. DelMarkedStressAntOpen .o. 
 #OK, now annotations are taken care of by having marked the ,# -> ,#'' type stress markers
 #We assume a secondary stress two sylables to the left of a primary stress
 #IFF there is not already a secondary stress annotation in segment
-define InsSecondSt2Left     [..] -> "''" || SegBoundary [\"''"]* VowelUnitL _ [\"''" & \VowelUnitL]* VowelUnitL [\"''" & \VowelUnitL]* VowelUnitL "'" [\"''"]* SegBoundary;
+define InsSecondSt2Left     [..] -> "''" || SegBoundaryHard [\"''"]* VowelUnitStartLNS _ [\"''" & \VowelUnitStartLNS]* VowelUnitStartLNS [\"''" & \VowelUnitStartLNS]* VowelUnitStartLNS "'" [\"''"]* SegBoundaryHard;
 
 #infer primary stress before these annotations
-define InsPrimaryConsAnt    [..] -> "'" || SegBoundary [\SegBoundary & \"'"]* [VowelUnitL & \[$."'"] & \[$."''"]]  _ [\VowelUnitL & \ConsUnitL]* ConsUnitL 
-                                            [\VowelUnitL & \ConsUnitL]* ["\hvo"|"\hno"|"\svo"|"\sno"] [\SegBoundary & \"'"]* SegBoundary;
+define InsPrimaryConsAnt    [..] -> "'" \\ SegBoundaryHard [\SegBoundaryHard & \"'"]* [VowelUnitStartLNS & \[$."'"] & \[$."''"]]  _ [\VowelUnitStartLNS & \ConsUnitStartL]* ConsUnitStartL 
+                                            [\VowelUnitStartLNS & \ConsUnitStartL]* ["\hvo"|"\hno"|"\svo"|"\sno"] [\SegBoundaryHard & \"'"]* SegBoundaryHard;
 
 #Insert a "separator" to make single-sylables stressed
-define InsInitSeparator     [..] -> "->" " "|| .#. _ [\SegBoundary]* .#.;
+define InsInitSeparator     [..] -> "->" " "|| .#. _ [\SegBoundaryHard]* .#.;
 #Now use the segment stresses to stress the first unit in a segment unless something has already been done
-define LPrimarySegStress    [..] -> "'" || SegBoundary [\VowelUnitStartL & \SegBoundary]* VowelUnitStartL _ [\SegBoundary & \"'"]* SegBoundary " " ["<-"|"<<-"];
-define RPrimarySegStress    [..] -> "'" || ["->"|"->>"] " " [\VowelUnitStartL & \SegBoundary]* VowelUnitStartL _ [\SegBoundary & \"'"]* SegBoundary;
-define LSecondSegStress     [..] -> "''" || SegBoundary [\VowelUnitStartL & \SegBoundary]* VowelUnitStartL _ [\SegBoundary & \"''"]* SegBoundary " " "->>";
-define RSecondSegStress     [..] -> "'" || "<<-" " " [\VowelUnitStartL & \SegBoundary]* VowelUnitStartL _ [\SegBoundary & \"''"]* SegBoundary;
+define LPrimarySegStress    [..] -> "'" || SegBoundaryHard [\VowelUnitStartLNS & \SegBoundaryHard]* VowelUnitStartLNS _ [\SegBoundaryHard & \"'"]* " " ["<-"|"<<-"];
+define RPrimarySegStress    [..] -> "'" || ["->"|"->>"] " " [\VowelUnitStartLNS & \SegBoundaryHard]* VowelUnitStartLNS _ [\SegBoundaryHard & \"'"]* SegBoundaryHard;
+define LSecondSegStress     [..] -> "''" || SegBoundaryHard [\VowelUnitStartLNS & \SegBoundaryHard]* VowelUnitStartLNS _ [\SegBoundaryHard & \"''"]* " " "->>";
+define RSecondSegStress     [..] -> "'" || "<<-" " " [\VowelUnitStartLNS & \SegBoundaryHard]* VowelUnitStartLNS _ [\SegBoundaryHard & \"''"]* SegBoundaryHard;
 define SegmentStresses LPrimarySegStress .o. RPrimarySegStress .o. LSecondSegStress .o. RSecondSegStress;
 
 define DeleteSegmentMarkers [" "|"->"|"<-"|"-"|"->>"|"<<-"] -> 0;
+#We also need to insert commas in the deleted positions i.e. @a <<- @b goes to @a,@b instead of @a@b
+define RestoreCommas "@" -> ",@", "#" -> ",#" || ? _;
 
 
 #If we dont' split this up we end up with a 64MB FSM
 define Phase36a AssignStressAnts .o. DelStressAnt;
-define Phase36b InsSecondSt2Left .o. InsPrimaryConsAnt;
-define Phase36c InsInitSeparator .o. SegmentStresses .o. DeleteSegmentMarkers;
+define Phase36b InsPrimaryConsAnt .o. InsSecondSt2Left; #This order because inferred primary/secondary can be combined
+define Phase36c InsInitSeparator .o. SegmentStresses .o. DeleteSegmentMarkers .o. RestoreCommas;
 

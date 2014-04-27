@@ -1,10 +1,13 @@
 #This file contains helper functions
 
 define VowelUnitStartL [",@"|"@"] (["'"|"''"]);
+define VowelUnitStartLNS [",@"|"@"];
 define ConsUnitStartL [",#"|"#"]; #Consonant units can't be stressed
 define SegBoundary [[" " | .#.] ([VowelUnitStartL | ConsUnitStartL])]; #Segments end on a space (or the end of input)
+define SegBoundaryHard [" " | .#.]; #Used from phase 3.6 onwards, once everything has been grouped
 define GroupBoundary [[VowelUnitStartL | ConsUnitStartL]| SegBoundary];
 define UnitBoundary GroupBoundary;
+define UnitBoundaryHard [VowelUnitStartL | ConsUnitStartL | SegBoundaryHard];
 
 define VowelAnt ["\pln"|"\nat"|"\brd"|"\clr"|"\ctr"|"\iot"|"\rnd"|"\opq"|"\idp"|"\udp"];
 define ConsonantAnt ["\co"|"\vo"|"\no"|"\svo"|"\sno"|"\hvo"|"\hno"|"\w"|"\y"|"\sch"]; #I think sch should be a consonant ant because it makes consonant sequences make sense e.g. "ism" -> "is-e-m"
