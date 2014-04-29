@@ -9,7 +9,7 @@ define GroupBoundary [[VowelUnitStartL | ConsUnitStartL]| SegBoundary];
 define UnitBoundary GroupBoundary;
 define UnitBoundaryHard [VowelUnitStartL | ConsUnitStartL | SegBoundaryHard];
 
-define VowelAnt ["\pln"|"\nat"|"\brd"|"\clr"|"\ctr"|"\iot"|"\rnd"|"\opq"|"\idp"|"\udp"];
+define VowelAnt ["\pln"|"\nat"|"\brd"|"\clr"|"\ctr"|"\iot"|"\rnd"|"\opq"|"\idp"|"\udp"|"\natpos"];
 define ConsonantAnt ["\co"|"\vo"|"\no"|"\svo"|"\sno"|"\hvo"|"\hno"|"\w"|"\y"|"\sch"]; #I think sch should be a consonant ant because it makes consonant sequences make sense e.g. "ism" -> "is-e-m"
 
 define Ant ["\si"|"\st"|"\stst"|"\sel"|"\ser"|"\selr"|"\serl"|"\se"|VowelAnt|ConsonantAnt]; #All possible annotations after preprocessing
@@ -34,3 +34,4 @@ define EarlyVowel        [a|e|i|o|u];
 
 define Alphabet         [EarlyConsonant | EarlyVowel | Ant | "{" | "}" | "@" | "#" | "$" | "$$" | SegBoundary | GroupBoundary | "-" | "'" | "<-" | "<<-" | "->" | "->>"];
 
+define LaterStressMarker ["'"|"''"|"_"];

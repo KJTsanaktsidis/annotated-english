@@ -36,10 +36,14 @@ define NgReplace NgReplace1 .o. NgReplace2 .o. NgReplace3 .o. NgReplace4;
 
 #OK, let's do gh
 #gh is silent everywhere
+#before eliminating it, we should check if there is a vowel on LHS of us
+#if so, (and it's not already annotated) we should annotate with \natpos
+#This will allow step 3.7 to know that a stressed vowel here is in natural position
+define GHMarkNat    EarlyVowel -> "\natpos" "{" ... "}" || NotInAntL _ "g" "h";
 define GhReplace1   "g" "h"     -> 0 || NotInAntL _;
 #\opq{gh} says should be schwa, but Jose reckons try a
 define GhReplace2   WithAnt("\opq", "g" "h") -> "a";
-define GhReplace GhReplace1 .o. GhReplace2;
+define GhReplace GHMarkNat .o. GhReplace1 .o. GhReplace2;
 
 #wh:
 #wh becomes \co{w} at begining of seg or when followed by consonant

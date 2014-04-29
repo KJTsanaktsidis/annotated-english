@@ -3,6 +3,7 @@
 from subprocess import Popen, PIPE
 
 phase34_testcases = {
+    r"night" : r"#n,@\natpos{i},#t",
     r'cons\pln${e}c\nat{u}tive' : r'#c,@o,#ns,@\pln${e},#c,@\nat{u},#t,@i,#v,@e',
     r'science' : r'#sc,@ie,#nc,@e',
     r'de\si{b}t' : r'#d,@e,#t',
@@ -39,7 +40,7 @@ phase35_testcases = {
     r'f\brd{ie}ld' : r'#f,@\brd{ie},#ld',
     r's\brd{u}pra\st{i}ng\w{u}inal' : r'#s,@\brd{u},#pr,@a,@\st{i},#\co{n}\co{g}\w{u},@i,#n,@a,#l',
     r'v\nat{e}\si{h}icle' : r'#v,@\nat{e},@i,#cl,@e',
-    r'higher' : r'#h,@i,@e,#r',
+    r'higher' : r'#h,@\natpos{i},@e,#r',
     r'a\ser{}way' : r'@a -> #w,@ay',
     r'flowing' : r'#fl,@ow,@i,#\co{n}',
     r'see-ing' : r'#s,@ee <- @i,#\co{n}',
