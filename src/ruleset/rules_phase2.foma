@@ -66,21 +66,30 @@ define Phase34 MarkerAdd .o. GroupUnits .o. UndoMarkerAdd .o. UndoGroupingsInAnt
 #Match l-r pairs for digraphs and break them
 #These rules actually all need to run at the same priority to work
 
+define Natpos ["\natpos" "{" "}"];
 define AllowedDigraphs ["a" "a" | "a" "e" | "a" "i" | "a" "y" | "a" "u" | "a" "w" | "e" "a" | "e" "e" |
-                        "e" "i" | "e" "y" | "e" "u" | "e" "w" | "o" "a" | "o" "i" | "o" "y" | "o" "u" | "o" "w"];
-define VowelOrStress WithAnt([VowelAnt|"\st"|"\stst"], [\"}"]*);
+                        "e" "i" | "e" "y" | "e" "u" | "e" "w" | "o" "a" | "o" "i" | "o" "y" | "o" "u" | "o" "w" |
+                        "a" Natpos | "e" Natpos | "i" Natpos | "o" Natpos |"u" Natpos];
+define VowelOrStress [WithAnt([[VowelAnt & \"\natpos"]|"\st"|"\stst"], [\"}"]*)];
+
+#If we have natpos in the middle of allowed digraphs, trash it
+define TrashNatpos Natpos -> 0 || "a" _ "a", "a" _ "e", "a" _ "i", "a" _ "y", "a" _ "u", "a" _ "w",
+                                                "e" _ "a", "e" _ "e", "e" _ "i", "e" _ "y", "e" _ "u", "e" _ "w",
+                                                "o" _ "a", "o" _ "i", "o" _ "y", "o" _ "u", "o" _ "w";
+
 #for some reason foma/xfst is incredibly stupid. A ,, B doesn't do what one would expect
 #if they're defined elsewhere. You actually need to literally include them like so
-define Phase35 AllowedDigraphs @> ... ",@" // VowelUnitStartL _ \UnitBoundary #ne double comma pas
-    ,,  "a" @> ... ",@" // VowelUnitStartL _ ["o"|VowelOrStress]
-    ,,  "e" @> ... ",@" // VowelUnitStartL _ ["o"|VowelOrStress]
-    ,,  "i" @> ... ",@" // VowelUnitStartL _ ["a"|"e"|"i"|"o"|"u"|"y"|"w"|VowelOrStress]
-    ,,  "o" @> ... ",@" // VowelUnitStartL _ ["e"|VowelOrStress]
-    ,,  "u" @> ... ",@" // VowelUnitStartL _ ["a"|"e"|"i"|"o"|"u"|"y"|"w"|VowelOrStress]
+define DigraphWrite AllowedDigraphs -> ... ",@" // VowelUnitStartL _ \UnitBoundary #ne double comma pas
+    ,,  "a" -> ... ",@" // VowelUnitStartL _ ["o"|VowelOrStress]
+    ,,  "e" -> ... ",@" // VowelUnitStartL _ ["o"|VowelOrStress]
+    ,,  "i" -> ... ",@" // VowelUnitStartL _ ["a"|"e"|"i"|"o"|"u"|"y"|"w"|VowelOrStress]
+    ,,  "o" -> ... ",@" // VowelUnitStartL _ ["e"|VowelOrStress]
+    ,,  "u" -> ... ",@" // VowelUnitStartL _ ["a"|"e"|"i"|"o"|"u"|"y"|"w"|VowelOrStress]
     #This rule not in the paper but i'm pretty sure no vowel digraph is formed in e.g. b,ye -> b,y,e
-    ,,  ["y"|"w"] @> ... ",@" // VowelUnitStartL _ ["a"|"e"|"i"|"o"|"u"|"y"|"w"|VowelOrStress]
-    ,,  WithAnt(VowelAnt, [\"}"]*) @> ... ",@" // VowelUnitStartL _ \GroupBoundary;
+    ,,  ["y"|"w"] -> ... ",@" // VowelUnitStartL _ ["a"|"e"|"i"|"o"|"u"|"y"|"w"|VowelOrStress]
+    ,,  [WithAnt(VowelAnt, [\"}"]*)|Natpos] -> ... ",@" // VowelUnitStartL _ \GroupBoundary;
     
+define Phase35 TrashNatpos .o. DigraphWrite;
 
 #Now we need to mark stresses.
 #Section 3.6

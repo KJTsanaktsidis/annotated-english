@@ -2,6 +2,8 @@ source functions.foma
 source rules_phase1.foma
 source rules_phase2.foma
 #regex [Alphabet]+;
+set show-flags ON
+set flag-is-epsilon ON
 regex Phase31;
 regex Phase32;
 regex Phase33;
