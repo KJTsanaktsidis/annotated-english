@@ -1,6 +1,7 @@
 source functions.foma
 source rules_phase1.foma
 source rules_phase2.foma
+source rules_phase3.foma
 #regex [Alphabet]+;
 set show-flags ON
 set flag-is-epsilon ON
@@ -15,6 +16,8 @@ regex Phase36a;
 regex Phase36b;
 regex Phase36c;
 save stack phase36.fst
+regex Phase37;
+save stack phase37.fst
 sigma
 save stack all.fst
 quit

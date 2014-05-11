@@ -1,0 +1,56 @@
+#Section 3.7: Categorise vowel occcurances
+#Mark vowles as stressed (''/') or unstressed (_)
+#           as natural (*) or plain (&) or unstressed (%)
+#           as rhotic (!) or non-rhotic (+)
+#
+#Makr consonants as simple (|) or complex (:)
+
+#First, mark everything unstressed with a _
+define MarkUnstressed [..] -> "_" || ["@"|",@"] _ \["'"|"''"];
+
+#Next, mark consonant groups as single or complex
+define SingleConsonantLetter ["b"|"c"|"d"|"f"|"g"|"h"|"j"|"k"|"l"|"m"|"n"|"p"|"r"|"s"|"t"|"w"|"y"|"v"|"z"]; #everything but x
+#Exception from paper: i don't believe ll and rr count as complex groups c.f. tullius
+define SingleConsonantGroup [[AnyAnt(SingleConsonantLetter) - WithAnt("\co","r")] | [[AnyAnt(?) AnyAnt(["l"|"r"])] - [AnyAnt("l") AnyAnt("l")] - [AnyAnt("r") AnyAnt("r")]]];
+
+define MarkSingleConsGroups [..] -> "|" || ["#"|",#"] _ SingleConsonantGroup UnitBoundary;
+define MarkComplexConsGroups [..] -> ":" || ["#"|",#"] _ \"|";
+
+define Unit \[",@"|",#"|"@"|"#"]*;
+define VMk ["@"|",@"];
+define StMk ["'"|"''"];
+define StVMk VMk StMk;
+define OneV ["a"|"e"|"i"|"o"|"u"|"w"|"y"];
+
+define MarkNaturalVowelGroups [..] -> "*" || StVMk _ OneV .#., #It appears at the end of a word segment
+                                            StVMk _ OneV ",@", #It is followed by another vowel unit
+                                            StVMk _ OneV ",#" "|" Unit  ",@", #It is followed by a single consonant group followed by a vowel unit
+                                            StVMk _ OneV "\natpos" "{" "}"; #It was followed by a silent GH (after which we removed it)
+define MarkPlainVowelGroups [..] -> "&" || VMk ["'"|"''"] _ \"*";
+define MarkUnstressedNatPln [..] -> "%" || VMk "_" _ \["*"|"&"];
+
+define EliminateNatpos "\natpos" "{" "}" -> 0;
+
+#rhotic/non-rhotic
+#use "=" as a temporary marker to indicate where the rhotic marker will go
+define RhoticTmp [..] -> "=" || ["@"|",@"] ["'"|"''"|"_"] ["*"|"&"|"%"] _;
+
+#If the vowel is not followed by an r, non-rhotic
+define NonRhoticNoR "=" -> "+" || _ Unit* ",#" AnyAnt("r");
+#unstressed single vowels are non-rhotic
+define NonRhoticUnstressedSingle "=" -> "+" || VMk "_" "%" _ AnyAnt(OneV) UnitBoundaryHard;
+#A vowle unit is rhotic if it is followed by a single r (in the segment)
+define RhoticSingleR "=" -> "!" || _ Unit* ",#" [":"|"|"] "r" [\AnyAnt("r") | .#.];
+#or by a double r not followed by a vowel
+define RhoticDoubleR "=" -> "!" || _ Unit* ",#" [":"|"|"] "r" "r"  [\",@" | .#.];
+#but as an exception, sniff out a y in a vowel unit to make rr rhotic (so that carry et al is non-rhotic)
+define NonRhoticY "!" -> "+" // _ Unit* ",#" [":"|"|"] "r" "r" ",@" ["'"|"''"|"_"] ["*"|"&"|"%"] ["!"|"+"] AnyAnt("y");
+#everything else non0rhotic
+define NonRhoticElse "=" -> "+";
+
+
+define Phase37 MarkUnstressed .o. MarkSingleConsGroups .o. MarkComplexConsGroups .o. MarkNaturalVowelGroups 
+    .o. MarkPlainVowelGroups .o. MarkUnstressedNatPln .o.  EliminateNatpos
+    .o. RhoticTmp .o. NonRhoticNoR .o. NonRhoticUnstressedSingle .o. RhoticSingleR .o. RhoticDoubleR .o. NonRhoticY .o. NonRhoticElse; 
+
+

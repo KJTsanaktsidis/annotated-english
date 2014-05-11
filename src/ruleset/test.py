@@ -72,6 +72,58 @@ phase36_testcases = {
     r"r\pln$${e}pr\iot{e}senta\sno{ti}on" : r"#r,@''\pln{e},#pr,@\iot{e},#s,@e,#nt,@'a,#\sno{ti},@o,#n"
 }
 
+phase37_testcases = {
+    r"so" : r"#|s,@'*+o",
+    r"me" : r"#|m,@'*+e",
+    r"my" : r"#|m,@'*+y",
+    r"high" : r"#|h,@'*+i",
+    r"night" : r"#|n,@'*+i,#|t",
+    r"toe" : r"#|t,@'*+o,@_%+e",
+    r"giant" : r"#|g,@'*+i,@_%+a,#:nt",
+    r"po\iot{e}t" : r"#|p,@'*+o,@_%+\iot{e},#|t",
+    r"micro" : r"#|m,@'*+i,#|cr,@_%+o",
+    r"plate" : r"#|pl,@'*+a,#|t,@_%+e",
+    r"phony" : r"#:ph,@'*+o,#|n,@_%+y",
+    r"dino\no{s}aur" : r"#|d,@'*+i,#|n,@_%+o,#|\no{s},@_%!au,#|r",
+    r"able" : r"@'*+a,#|bl,@_%+e",
+    r"idle" : r"@'*+i,#|dl,@_%+e",
+    r"nucl\iot{e}ar" : r"#|n,@'*+u,#|cl,@_%+\iot{e},@_%+a,#|r",
+    r"vague" : r"#|v,@'*+a,#|\co{g},@_%+e",
+    r"saffron" : r"#|s,@'&+a,#:ffr,@_%+o,#|n",
+    r"little" : r"#|l,@'&+i,#:ttl,@_%+e",
+    r"twenty" : r"#:tw,@'&+e,#:nt,@_%+y",
+    r"aqua" : r"@'&+a,#:kw,@_%+a",
+    r"temple" : r"#|t,@'&+e,#:mpl,@_%+e",
+    r"checking" : r"#:ch,@'&+e,#:ck,@_%+i,#|\co{n}",
+    r"graphic" : r"#|gr,@'&+a,#:ph,@_%+i,#|c",
+    r"pha\co{r}ynx" : r"#:ph,@'&+a,#:\co{r},@_%+y,#:nx",
+    r"t\si{o}u\co{gh}er" : r"#|t,@'&+u,#:\co{gh},@_%+e,#|r",
+    r"fate" : r"#|f,@'*+a,#|t,@_%+e",
+    r"fat" : r"#|f,@'&+a,#|t",
+    r"hungry" : r"#|h,@'&+u,#:\co{n}\co{g}r,@_%+y",
+    r"winner" : r"#|w,@'&+i,#:nn,@_%+e,#|r",
+    r"\iot{e}r\st{a}dic\nat{a}te" : r"@_%+\iot{e},#|r,@'*+a,#|d,@_%+i,#|c,@_%+\nat{a},#|t,@_%+e",
+    r"\sno{s}ugar" : r"#|\sno{s},@'*+u,#|g,@_%+a,#|r",
+    r"lantern" : r"#|l,@'&+a,#:nt,@_%+e,#:rn",
+    r"player" : r"#|pl,@'&+ay,@_%+e,#|r",
+    r"fair" : r"#|f,@'&!ai,#|r",
+    r"laird" : r"#|l,@'&!ai,#:rd",
+    r"fairy" : r"#|f,@'&!ai,#|r,@_%+y",
+    r"ear\sel{}ring" : r"@'&!ea,#|r,#|r,@_%+i,#|\co{n}",
+    r"card"  : r"#|c,@'&!a,#:rd",
+    r"far" :  r"#|f,@'&!a,#|r",
+    r"norm" : r"#|n,@'&!o,#:rm",
+    r"first" : r"#|f,@'&!i,#:rst",
+    r"her" : r"#|h,@'&!e,#|r",
+    r"fir\sel{}ry" : r"#|f,@'&!i,#|r,#|r,@_%+y",
+    r"pray\si{e}r" : r"#|pr,@'&!ay,#|r",
+    r"may\si{o}r" : r"#|m,@'&!ay,#|r",
+    r"err" : r"@'&!e,#:rr",
+    r"whirr" : r"#|\co{w},@'&!i,#:rr",
+    r"carry" : r"#|c,@'&+a,#:rr,@_%+y",
+    r"mi\co{r}\iot{a}cle" : r"#|m,@'&+i,#:\co{r},@_%+\iot{a},#|cl,@_%+e"
+}
+
 def test(testcases, fst, name):
     successct = 0
     failct = 0
@@ -93,3 +145,4 @@ def test(testcases, fst, name):
 test(phase34_testcases, 'phase34.fst', 'Phase 3.4 Grouping')
 test(phase35_testcases, 'phase35.fst', 'Phase 3.5 Units')
 test(phase36_testcases, 'phase36.fst', 'Phase 3.6 Stress')
+test(phase37_testcases, 'phase37.fst', 'Phase 3.7 Vowel Catagorisation')
