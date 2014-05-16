@@ -1,0 +1,40 @@
+#Rules for handling consonant pronunciation
+#Again, it's huge, so it's own file
+
+define InC ["#"|",#"] [\["@"|",@"]]*; #Make sure we don't match stuff like j in vowels, which is an IPA symbol not a letter
+define InCNA InC & NotInAntL;
+define SB10 [.#.|"-"];
+
+define IPACons  WithAnt("\sno", \"x" ?*) -> "ʃ" ,,
+                WithAnt("\sno", "x") -> "k" "ʃ" ,,
+                WithAnt("\svo", ?+) -> "ʒ" ,,
+                WithAnt("\hno", ?+) -> "t" "ʃ" ,,
+                WithAnt("\hvo", ?+) -> "d" "ʒ" ,,
+                WithAnt("\y", ?*) -> "j" ,,
+                WithAnt("\w", ?*) -> ,,
+                "b" -> "b" || InCNA_ ,,
+                #not including a rule for c before e,i,y because I'm includng a rule in stage 3 to autoannotate it
+                WithAnt("\no", "c") -> "s" ,,
+                "c" -> "k" || InCNA_ ,,
+                WithAnt("\co", "c") -> "k" ,,
+                "d" -> "d" || InCNA _ ,,
+                WithAnt("\no", "d") -> "t" ,,
+                WithAnt("\co", "g" "h") -> "f" ,,
+                "f" -> "f" || InCNA _ ,,
+                WithAnt("\no", "u") -> "f" ,,
+                WithAnt("\vo", ["f"|"p" "h"]) -> "v" ,,
+                #Again, g before eiy is already annotated in s3
+                "g" -> "g" || InCNA _ ,,
+                WithAnt("\co", "g") -> "g" ,,
+                WithAnt("\no", "g") -> "k" ,,
+                WithAnt("\svo", "g") -> "ʒ" ,,
+                "j" -> "d" "ʒ" || InCNA  _ ,, #Make sure we don't match j in vowels, which 
+                WithAnt("\co", "j") -> "h" ,,
+                WithAnt("\svo", "j") -> "ʒ" ,,
+                "h" -> "h" || InCNA _ \SB10 ,,
+                WithAnt("\no", "h") -> "h" ,,
+                WithAnt("\co", ["h"|"c" "h"]) -> "x" ,,
+                "k" -> "k" || InCNA _ ,,
+                "l" -> "l" || InCNA _ ,,
+
+

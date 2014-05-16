@@ -5,7 +5,7 @@ from subprocess import Popen, PIPE
 phase34_testcases = {
     r"night" : r"#n,@i\natpos{},#t",
     r'cons\pln${e}c\nat{u}tive' : r'#c,@o,#ns,@\pln${e},#c,@\nat{u},#t,@i,#v,@e',
-    r'science' : r'#sc,@ie,#nc,@e',
+    r'science' : r'#s\no{c},@ie,#n\no{c},@e',
     r'de\si{b}t' : r'#d,@e,#t',
     r'f\brd{a}s\si{t}en' : r'#f,@\brd{a},#s,@e,#n',
     r'go\sel{}ing' : r'#g,@o <- @i,#\co{n}',
@@ -18,7 +18,7 @@ phase34_testcases = {
     r'when' : r'#\co{w},@e,#n',
     r'k\nat{i}w\nat{i}' : r'#k,@\nat{i},#w,@\nat{i}',
     r'b\iot{e}\ser{}ware' : r'#b,@\iot{e} -> #w,@a,#r,@e',
-    r'cyan' : r'#c,@ya,#n',
+    r'cyan' : r'#\no{c},@ya,#n',
     r'twine' : r'#tw,@i,#n,@e',
     r'gu\brd{a}tem\brd${a}la' : r'#\co{g}w,@\brd{a},#t,@e,#m,@\brd${a},#l,@a',
     r'g\brd{u}\co{r}\brd{u}' : r'#g,@\brd{u},#\co{r},@\brd{u}',
@@ -34,7 +34,7 @@ phase34_testcases = {
 
 phase35_testcases = {
     r'bait' : r'#b,@ai,#t',
-    r'science' : r'#sc,@i,@e,#nc,@e',
+    r'science' : r'#s\no{c},@i,@e,#n\no{c},@e',
     r'y\pln{e}ah' : r'#y,@\pln{e},@a',
     r'\nat{o}\st{a}\no{s}i\no{s}' : r'@\nat{o},@\st{a},#\no{s},@i,#\no{s}',
     r'f\brd{ie}ld' : r'#f,@\brd{ie},#ld',
@@ -66,7 +66,7 @@ phase36_testcases = {
     r"yo-yo" : r"#y,@'o-#y,@o",
     r"ire\sel{}land" : r"@'i,#r,@e-#l,@a,#nd",
     r"complic\stst{a}te" : r"#c,@'o,#mpl,@i,#c,@''a,#t,@e",
-    r"science" : r"#sc,@'i,@e,#nc,@e",
+    r"science" : r"#s\no{c},@'i,@e,#n\no{c},@e",
     r"ma\sno{ch}\st{i}ne" : r"#m,@a,#\sno{ch},@'i,#n,@e",
     r"ini\sno{t}ia\sno{ti}on" : r"@i,#n,@''i,#\sno{t},@i,@'a,#\sno{ti},@o,#n",
     r"r\pln$${e}pr\iot{e}senta\sno{ti}on" : r"#r,@''\pln{e},#pr,@\iot{e},#s,@e,#nt,@'a,#\sno{ti},@o,#n"

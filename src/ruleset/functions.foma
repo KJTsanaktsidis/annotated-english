@@ -27,7 +27,7 @@ define NotInAntL        ["}" | GroupBoundary] [\Ant & \StressMarker]*; #on LHS o
 define NotInAntR        [\"}"]* [Ant | StressMarker | GroupBoundary]; #on RHS of match, ensures that we're not matching within an annotation
 
 #this guy is needed because WithAnt() on RHS of replace rule creates ambiguity
-define WithAntR(AN, X)  [AN "{" X "}"];
+define WithAntR(AN, X)  [AN "{" [X-"}"] "}"];
 
 define EarlyConsonant    [b|c|d|f|g|h|j|k|l|m|n|p|q|r|s|t|v|w|x|y|z];
 define EarlyVowel        [a|e|i|o|u];
