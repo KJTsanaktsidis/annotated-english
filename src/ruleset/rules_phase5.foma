@@ -1,0 +1,42 @@
+#Apply les diphthongs
+
+define CSegStart [.#. | "-"] ["#"|",#"];
+
+#the :| distinction is not useful anymore
+define EliminateComplexMarker [":"|"|"] -> 0;
+
+#The digraphs kn, pn, gn, cn become n at the begining of a segment
+define Digraphs1 ["k" | "p" | "g" | "c"] "n" -> "n" || CSegStart _;
+
+#ph is always f
+define Digraphs2 "p" "h" -> "f" || NotInAntL _ ;
+
+#ch is always ch
+define Digraphs3 "c" "h" -> "t" "ʃ" || NotInAntL _;
+
+#sh is always sh
+define Digraphs4 "s" "h" -> "ʃ" || NotInAntL _;
+
+#ps is s at begining of seg
+define Digraphs5 "p" "s" -> "s" || CSegStart _;
+
+#rh is r at begining of segment
+define Digraphs6 "r" "h" -> "ɹ" || CSegStart _;
+
+#pt is p at begining of segment
+define Digraphs7 "p" "t" -> "t" || CSegStart _;
+
+#th is voiced before vowel and voiceless otherwise
+define Digraphs8 "t" "h" -> "ð" || NotInAntL _ ["@"|",@"]
+                .o. "t" "h" -> "θ" || NotInAntL _;
+
+#gg -> g
+define Digraphs9 "g" "g" -> "g" || NotInAntL _;
+
+#ss -> s
+define Digraphs10 "s" "s" -> "s" || NotInAntL _;
+
+define Phase39 Digraphs1 .o. Digraphs2 .o. Digraphs3 .o. Digraphs4 .o. Digraphs5
+            .o. Digraphs6 .o. Digraphs7 .o. Digraphs8 .o. Digraphs9 .o. Digraphs10;
+
+
