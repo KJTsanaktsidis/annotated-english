@@ -122,13 +122,17 @@ define LSecondSegStress     [..] -> "''" || SegBoundaryHard [\VowelUnitStartLNS 
 define RSecondSegStress     [..] -> "'" || "<<-" " " [\VowelUnitStartLNS & \SegBoundaryHard]* VowelUnitStartLNS _ [\SegBoundaryHard & \"''"]* SegBoundaryHard;
 define SegmentStresses LPrimarySegStress .o. RPrimarySegStress .o. LSecondSegStress .o. RSecondSegStress;
 
-define DeleteSegmentMarkers [" "|"->"|"<-"|"-"|"->>"|"<<-"] -> 0;
+#we can now define one segment marker to rule them all
+define DeleteSegmentMarkers1 ["->"|"<-"|"-"|"->>"|"<<-"] -> "-" || ? _ ; #Don't match the artificial separator at the start
+define DeleteSegmentMarkers2 [" "|"->"|"<-"|"-"|"->>"|"<<-"] -> 0 || .#. _;
+define DeleteSegmentMarkers3 " " -> 0; #no need for spaces
+define DeleteSegmentMarkers DeleteSegmentMarkers2 .o. DeleteSegmentMarkers1 .o. DeleteSegmentMarkers3;
 #We also need to insert commas in the deleted positions i.e. @a <<- @b goes to @a,@b instead of @a@b
-define RestoreCommas "@" -> ",@", "#" -> ",#" || ? _;
+define RestoreCommas "@" -> ",@", "#" -> ",#" || \"-" _;
 
 
 #If we dont' split this up we end up with a 64MB FSM
 define Phase36a AssignStressAnts .o. DelStressAnt;
 define Phase36b InsPrimaryConsAnt .o. InsSecondSt2Left; #This order because inferred primary/secondary can be combined
-define Phase36c InsInitSeparator .o. SegmentStresses .o. DeleteSegmentMarkers .o. RestoreCommas;
+define Phase36c InsInitSeparator .o. SegmentStresses .o. DeleteSegmentMarkers; # .o. RestoreCommas;
 

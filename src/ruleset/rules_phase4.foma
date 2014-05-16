@@ -1,0 +1,14 @@
+#This does section 3.8, the transformation of vowels to sounds
+#This is huge, so it's in it's own file
+
+#Jose identifies a very useful rule, which is that a group of annotated vowels is equivalent to
+#the annotated first vowel with the remaining crossed out
+define EliminateAntDiphthongs \"}"* -> 0 || VowelAnt "{" ? _ "}";
+
+#With this done, we need to go through tables 4, 5, 6, 7 and start making IPA transcriptions
+
+#First: Non-annotated, unstressed, single vowels
+define NAUSSL ["@"|",@"] "_" "%" ["!"|"+"];
+
+define NAUSSRep "a" -> "ə" || 
+                

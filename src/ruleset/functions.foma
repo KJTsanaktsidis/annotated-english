@@ -6,7 +6,7 @@ define ConsUnitStartL [",#"|"#"]; #Consonant units can't be stressed
 define SegBoundary [[" " | .#.] ([VowelUnitStartL | ConsUnitStartL])]; #Segments end on a space (or the end of input)
 define SegBoundaryHard [" " | .#.]; #Used from phase 3.6 onwards, once everything has been grouped
 define GroupBoundary [[VowelUnitStartL | ConsUnitStartL]| SegBoundary];
-define UnitBoundary GroupBoundary;
+define UnitBoundary [GroupBoundary|"-"];
 define UnitBoundaryHard [VowelUnitStartL | ConsUnitStartL | SegBoundaryHard];
 
 define VowelAnt ["\pln"|"\nat"|"\brd"|"\clr"|"\ctr"|"\iot"|"\rnd"|"\opq"|"\idp"|"\udp"|"\natpos"];
