@@ -8,7 +8,174 @@ define EliminateAntDiphthongs \"}"* -> 0 || VowelAnt "{" ? _ "}";
 #With this done, we need to go through tables 4, 5, 6, 7 and start making IPA transcriptions
 
 #First: Non-annotated, unstressed, single vowels
-define NAUSSL ["@"|",@"] "_" "%" ["!"|"+"];
+define SB8 ["-"|.#.];
+define UB8 [SB8 | "#" | ",#" | "@" | "@,"];
+define CM8 ["#"|",#"] [":"|"|"];
+define VM8 ["@"|",@"] ["'"|"''"|"_"] ["*"|"&"|"%"] ["!"|"+"];
 
-define NAUSSRep "a" -> "ə" || 
+#DIY vowel unit construction
+define VS ["@"|",@"];
+define ST ["'"|"''"];
+define NST "_";
+define AST [ST | NST];
+define NAT "*";
+define PLN "&";
+define ATN [NAT | PLN | "%"];
+define RH "!";
+define NRH "+";
+define ARH [RH | NRH];
+
+define NAUSSL VS NST ATN ARH;
+
+define NonRhoticL VS AST ATN NRH;
+define RhoticL VS AST ATN RH;
+define NatNonRhoticL VS AST NAT NRH;
+define NatRhoticL VS AST NAT RH;
+define PlnNonRhoticL VS AST PLN NRH;
+define PlnRhoticL VS AST PLN RH;
+define StNonRhoticL VS ST ATN NRH;
+define NoStNonRhoticL VS NST ATN NRH;
+define StRhoticL VS ST ATN RH;
+define NoStRhoticL VS NST ATN RH;
+
+define IPAVowel 
+                #Start with unstressed, unannotated
+                "a" -> "ə" || NAUSSL _  UB8 ,,
+                "e" -> 0 || NAUSSL _ SB8 ,,
+                "e" -> 0 || NAUSSL _ CM8 AnyAnt(["d"|"s"]) ,,
+                "e" -> "ə" || NAUSSL _ \.#. & [[[CM8 ?*] - SB8] - [CM8 AnyAnt(["d"|"s"])]] ,,
+                ["i"|"y"] -> "i" || NAUSSL _ UB8 ,,
+                "o" -> "o" "ʊ" || NAUSSL _ SB8 ,,
+                "o" -> "o" "ʊ" || NAUSSL _ CM8 AnyAnt("s") ,,
+                "o" -> "o" "ʊ" || NAUSSL _ VM8 AnyAnt("e") CM8 AnyAnt("s") ,,
+                "o" -> "ə" || NAUSSL _ [?* - SB8 - [CM8 AnyAnt("s")] - [VM8 AnyAnt("e") CM8 AnyAnt("s")]] ,,
+                "u" -> "ə" || NAUSSL _ UB8 ,,
                 
+                #Now we copnsider stressed or annotated words
+                WithAnt("\nat", "a") -> "e" "ɪ" || NonRhoticL  _ ,,
+                WithAnt("\nat", "a") -> "ɛ" "ʁ" || RhoticL _ ,,
+                "a" -> "e" "ɪ" || NatNonRhoticL _ ,,
+                "a" -> "ɛ" "ʁ" || NatRhoticL _ ,,
+                WithAnt("\nat", "e") -> "i" "ː" || NonRhoticL _ ,,
+                WithAnt("\nat", "e") -> "ɪ" "ʁ" || RhoticL _ ,,
+                "e" -> "i" "ː" || NatNonRhoticL _ ,,
+                "e" -> "ɪ" "ʁ" || NatRhoticL _ ,,
+                WithAnt("\nat", ["i"|"y"]) -> "a" "ɪ" || NonRhoticL _ ,,
+                WithAnt("\nat", ["i"|"y"]) -> "a" "ɪ" "ʁ" || RhoticL _ ,,
+                ["i"|"y"] -> "a" "ɪ" || NatNonRhoticL _ ,,
+                ["i"|"y"] -> "a" "ɪ" "ʁ" || NatRhoticL _ ,,
+                WithAnt("\nat", "o") -> "o" "ʊ" || NonRhoticL _ ,,
+                WithAnt("\nat", "o") -> "ɔ" "ɹ" || RhoticL _ ,,
+                "o" -> "o" "ʊ" || NatNonRhoticL _ ,,
+                "o" -> "ɔ" "ɹ" || NatRhoticL _ ,,
+                WithAnt("\nat", ["u"|"w"]) -> "j" "u" "ː" || NonRhoticL _ ,,
+                WithAnt("\nat", ["u"|"w"]) -> "j" "ʊ" "ʁ" || RhoticL _ ,,
+                ["u"|"w"] -> "j" "u" "ː" || PlnNonRhoticL _ ,,
+                ["u"|"w"] -> "j" "ʊ" "ʁ" || PlnRhoticL _ ,,
+                #plain
+                WithAnt("\pln", "a") -> "æ" || NonRhoticL  _ ,,
+                WithAnt("\pln", "a") -> "ɑ" "ɹ" || RhoticL _ ,,
+                "a" -> "æ" || PlnNonRhoticL _ ,,
+                "a" -> "ɑ" "ɹ" || PlnRhoticL _ ,,
+                WithAnt("\pln", "e") -> "ɛ" || NonRhoticL _ ,,
+                WithAnt("\pln", "e") -> "ɜ" "ɹ" || RhoticL _ ,,
+                "e" -> "ɛ" || PlnNonRhoticL _ ,,
+                "e" -> "ɜ" "ɹ" || PlnRhoticL _ ,,
+                WithAnt("\pln", ["i"|"y"]) -> "ɪ" || NonRhoticL _ ,,
+                WithAnt("\pln", ["i"|"y"]) -> "ɜ" "ɹ" || RhoticL _ ,,
+                ["i"|"y"] -> "ɪ" || PlnNonRhoticL _ ,,
+                ["i"|"y"] -> "ɜ" "ɹ" || PlnRhoticL _ ,,
+                WithAnt("\pln", "o") -> "ɒ" || NonRhoticL _ ,,
+                WithAnt("\pln", "o") -> "ɔ" "ɹ" || RhoticL _ ,,
+                "o" -> "ɒ" || PlnNonRhoticL _ ,,
+                "o" -> "ɔ" "ɹ" || PlnRhoticL _ ,,
+                WithAnt("\pln", ["u"|"w"]) -> "ʌ" || NonRhoticL _ ,,
+                WithAnt("\pln", ["u"|"w"]) -> "ɜ" "ɹ" || RhoticL _ ,,
+                ["u"|"w"] -> "ʌ" || PlnNonRhoticL _ ,,
+                ["u"|"w"] -> "ɜ" "ɹ" || PlnRhoticL _ ,,
+                #Broad
+                WithAnt("\brd", "a") -> "ɑ" "ː" || NonRhoticL _ ,,
+                WithAnt("\brd", "a") -> "ɑ" "ɹ" || RhoticL _ ,,
+                WithAnt("\brd", "e") -> "e" "ɪ" || NonRhoticL _ ,,
+                WithAnt("\brd", "e") -> "ɜ" "ʁ" || RhoticL _ ,,
+                WithAnt("\brd", ["i"|"y"]) -> "i" "ː" || NonRhoticL _ ,,
+                WithAnt("\brd", ["i"|"y"]) -> "i" "ː" || RhoticL _ ,,
+                WithAnt("\brd", "o") -> "ɔ" "ː" || NonRhoticL _ ,,
+                WithAnt("\brd", "o") -> "ɔ" "ɹ" || RhoticL _ ,,
+                WithAnt("\brd", ["u"|"w"]) -> "u" "ː" || NonRhoticL _ ,,
+                WithAnt("\brd", ["u"|"w"]) -> "ʊ" "ʁ" || RhoticL _ ,,
+                #i-diphthong
+                WithAnt("\idp", ["a"|"e"]) -> "a" "ɪ" || NonRhoticL _ ,,
+                WithAnt("\idp", ["a"|"e"]) -> "a" "ɪ" "ʁ" || RhoticL _ ,,
+                WithAnt("\idp", "o") -> "w" "a" "ː" || NonRhoticL _ ,,
+                WithAnt("\idp", "o") -> "w" "a" "ː" "ɹ" || RhoticL _ ,,
+                WithAnt("\idp", "u") -> "j" "ɘ" || NonRhoticL _ ,,
+                WithAnt("\idp", "u") -> "j" "ɘ" "ɹ" || RhoticL _ ,,
+                #u-diphthong
+                WithAnt("\udp", ["a"|"o"]) -> "j" "ɘ" || NonRhoticL _ ,,
+                WithAnt("\udp", ["a"|"o"]) -> "j" "ɘ" "ʁ" || RhoticL _ ,,
+                WithAnt("\udp", "e") -> "ɔ" "ɪ" || NonRhoticL _ ,,
+                WithAnt("\udp", "e") -> "ɔ" "ɪ" "ʁ" || RhoticL _ ,,
+                WithAnt("\udp", "u") -> "j" "ʊ" || NonRhoticL _ ,,
+                WithAnt("\udp", "u") -> "j" "ʊ" "ɹ" || RhoticL _ ,,
+                #Clear
+                WithAnt("\clr", ["a"|"o"]) -> "ʌ" || VM8 _ ,,
+                WithAnt("\clr", "e") -> "æ" || NonRhoticL _ ,,
+                WithAnt("\clr", "e") -> "ɑ" "ɹ" || RhoticL _ ,,
+                WithAnt("\clr", "i") -> "æ" || VM8 _ ,,
+                #Central
+                WithAnt("\ctr", ["a"|"u"]) -> "ɛ" || VM8 _ ,,
+                WithAnt("\ctr", "e") -> "ɘ" || VM8 _ ,,
+                WithAnt("\ctr", "i") -> "ɘ" || NonRhoticL _ ,,
+                WithAnt("\ctr", "o") -> "ɜ" || NonRhoticL _ ,,
+                WithAnt("\ctr", ["i"|"o"]) -> "ɘ" "ɹ" || RhoticL _ ,,
+                #Ioted
+                WithAnt("\iot", ?) -> "ɪ" || VM8 _ ,,
+                #Rounded
+                WithAnt("\rnd", "a") -> "ɔ" "ː" || NonRhoticL _ ,,
+                WithAnt("\rnd", "a") -> "ɔ" "ɹ" || RhoticL _ ,,
+                WithAnt("\rnd", "e") -> "o" "ʊ" || VM8 _ ,,
+                WithAnt("\rnd", "o") -> "u" "ː" || VM8 _ ,,
+                WithAnt("\rnd", "u") -> "o" "ʊ" || NonRhoticL _ ,,
+                WithAnt("\rnd", "u") -> "ɔ" "ɹ" || RhoticL _ ,,
+                #Opaque
+                WithAnt("\opq", ["a"|"e"|"i"]) -> "ɔ" || VM8 _ ,,
+                WithAnt("\opq", "o") -> "ʊ" || NonRhoticL _ ,,
+                WithAnt("\opq", "o") -> "ʊ" "ʁ" || RhoticL _ ,,
+                WithAnt("\opq", "u") -> "ʊ" || VM8 _ ,,
+
+                #And do dipthongs
+                "a" "a" -> "ɑ" "ː" || NonRhoticL _ ,,
+                "a" "a" -> "ɑ" "ː" || RhoticL ,,
+                ["a" "e" | "e" "e"] -> "i" "ː" || NonRhoticL _ ,,
+                ["a" "e" | "e" "e"] -> "ɪ" "ʁ" || RhoticL _ ,,
+                "e" "a" -> "i" "ː" || StNonRhoticL _ ,,
+                "e" "a" -> "ɪ" "ʁ" || StRhoticL _ ,,
+                "e" "a" -> "ɪ" "ɘ" || NoStNonRhoticL _ ,,
+                "e" "a" -> "ɪ" "ɘ" "ɹ" || NoStRhoticL _ ,,
+                ["a" "i" | "a" "y"] -> "e" "ɪ" || NonRhoticL _ ,,
+                ["a" "i" | "a" "y"] -> "ɛ" "ʁ" || RhoticL _ ,,
+                ["e" "i" | "e" "y"] -> "e" "ɪ" || StNonRhoticL _ ,,
+                ["e" "i" | "e" "y"] -> "ɛ" "ʁ" || StRhoticL _ ,,
+                ["e" "i" | "e" "y"] -> "ɪ" || NoStNonRhoticL _ ,,
+                ["e" "i" | "e" "y"] -> "ɛ" "ʁ" || NoStRhoticL _ ,,
+                ["a" "u" | "a" "w"] -> "ɔ" "ː" || NonRhoticL _ ,,
+                ["a" "u" | "a" "w"] -> "ɔ" "ɹ" || RhoticL _ ,,
+                ["e" "u" | "e" "w"] -> "j" "u" "ː" || NonRhoticL _ ,,
+                ["e" "u" | "e" "w"] -> "j" "ʊ" "ʁ" || RhoticL _ ,,
+                ["o" "a" | "o" "w"] -> "o" "ʊ" || NonRhoticL _ ,,
+                ["o" "a" | "o" "w"] -> "ɔ" "ɹ" || RhoticL _ ,,
+                "o" "u" -> "a" "ʊ" || StNonRhoticL _ ,,
+                "o" "u" -> "a" "ʊ" "ʁ" || StRhoticL _ ,,
+                "o" "u" -> "ə" || NoStNonRhoticL _ ,,
+                "o" "u" -> "ə" "ɹ" || NoStRhoticL _ ,,
+                ["o" "i" | "o" "y"] -> "ɪ" "ɔ" || NonRhoticL _ ,,
+                ["o" "i" | "o" "y"] -> "ɪ" "ɔ" "ʁ" || RhoticL _ ,,
+                "o" "o" -> "u" "ː" || NonRhoticL _ ,,
+                "o" "o" -> "u" "ʁ" || RhoticL _;
+
+#after having done this, we need to eilminate any now-empty vowel units
+define EliminateEmptyVowels VM8 -> 0 || _ UB8;
+
+define Phase38 EliminateAntDiphthongs .o. IPAVowel .o. EliminateEmptyVowels;
+
