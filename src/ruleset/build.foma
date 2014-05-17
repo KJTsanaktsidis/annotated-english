@@ -4,6 +4,8 @@ source rules_phase2.foma
 source rules_phase3.foma
 source rules_phase4.foma
 source rules_phase5.foma
+source rules_phase6.foma
+source rules_phase7.foma
 #regex [Alphabet]+;
 set show-flags ON
 set flag-is-epsilon ON
@@ -24,6 +26,14 @@ regex Phase38;
 save stack phase38.fst
 regex Phase39;
 save stack phase39.fst
+regex Phase310;
+save stack phase310.fst
+regex Phase311;
+save stack phase311.fst
+regex Phase312a;
+regex Phase312b;
+regex Phase312c;
+save stack phase312.fst
 sigma
 save stack all.fst
 quit

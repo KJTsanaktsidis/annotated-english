@@ -77,7 +77,8 @@ define AhReplace    "h" -> 0 || AnyAntL([EarlyVowel|"y"|"w"]) _ [AnyAntR(EarlyCo
 #We annotate c before e, i, and y
 define CAnt "c" -> "\no" "{" ... "}" || NotInAntL _ AnyAnt(["e"|"i"|"y"]);
 define GAnt "g" -> "\hvo" "{" ... "}" || NotInAntL _ AnyAnt(["e"|"i"|"y"]);
+define NAnt "n" -> "\co" "{" ... "}" || NotInAntL _ [AnyAnt("k") | AnyAnt("c") AnyAnt(["a"|"o"|"u"|"w"]) | WithAnt("\co", "c")];
 
 #wire everything up together!
-define Phase33 NgReplace .o. GhReplace .o. WhReplace .o. WrReplace .o. QuReplace .o. GuReplace .o. AhReplace .o. CAnt .o. GAnt;
+define Phase33 NgReplace .o. GhReplace .o. WhReplace .o. WrReplace .o. QuReplace .o. GuReplace .o. AhReplace .o. CAnt .o. GAnt .o. NAnt;
 

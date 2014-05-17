@@ -1,3 +1,7 @@
+
+#Before converting diphthongs into IPA, a last case to decide
+
+
 #Apply les diphthongs
 
 define CSegStart [.#. | "-"] ["#"|",#"];
@@ -36,7 +40,7 @@ define Digraphs9 "g" "g" -> "g" || NotInAntL _;
 #ss -> s
 define Digraphs10 "s" "s" -> "s" || NotInAntL _;
 
-define Phase39 Digraphs1 .o. Digraphs2 .o. Digraphs3 .o. Digraphs4 .o. Digraphs5
+define Phase39 EliminateComplexMarker .o. Digraphs1 .o. Digraphs2 .o. Digraphs3 .o. Digraphs4 .o. Digraphs5
             .o. Digraphs6 .o. Digraphs7 .o. Digraphs8 .o. Digraphs9 .o. Digraphs10;
 
 

@@ -5,13 +5,28 @@ define InC ["#"|",#"] [\["@"|",@"]]*; #Make sure we don't match stuff like j in 
 define InCNA InC & NotInAntL;
 define SB10 [.#.|"-"];
 
+define VUL ["@"|",@"] [\["@"|",@"|"#"|",#"]]* [",#"|"#"];
+define VUR ["@"|",@"];
+
+define STVR ["@"|",@"] ["'"|"''"];
+
+define Voiced  [["b"|"d"|"g"|"j"|"l"|"m"|"n"|"r"|"v"|"w"|"y"|"z"] |
+                ["β"|"ð"|"ʒ"|"ʐ"|"ʝ"|"ɣ"|"ʁ"|"ɦ"|"ɱ"|"ʙ"|"ɾ"|"ɹ"|"ɻ"|"ʎ"|"ʟ"|"G"|"N"|"R"|"ɮ"|"ⱱ"|"ʋ"|"ɳ"|"ɲ"|"ŋ"] |
+                [WithAnt(["\vo"|"\svo"|"\hvo"], ?*)]];
+
+define DecideS "s" -> "\vo" "{" ... "}" || VUL _ VUR ,
+                                            VUL _  Voiced,
+                                            VUL _  SB10,
+                                            Voiced _ SB10;
+
+
 define IPACons  WithAnt("\sno", \"x" ?*) -> "ʃ" ,,
                 WithAnt("\sno", "x") -> "k" "ʃ" ,,
                 WithAnt("\svo", ?+) -> "ʒ" ,,
                 WithAnt("\hno", ?+) -> "t" "ʃ" ,,
                 WithAnt("\hvo", ?+) -> "d" "ʒ" ,,
                 WithAnt("\y", ?*) -> "j" ,,
-                WithAnt("\w", ?*) -> ,,
+                WithAnt("\w", ?*) -> "w" ,,
                 "b" -> "b" || InCNA_ ,,
                 #not including a rule for c before e,i,y because I'm includng a rule in stage 3 to autoannotate it
                 WithAnt("\no", "c") -> "s" ,,
@@ -36,5 +51,37 @@ define IPACons  WithAnt("\sno", \"x" ?*) -> "ʃ" ,,
                 WithAnt("\co", ["h"|"c" "h"]) -> "x" ,,
                 "k" -> "k" || InCNA _ ,,
                 "l" -> "l" || InCNA _ ,,
+                WithAnt(["\no"|"\co"], "l") -> "ɹ" ,,
+                "m" -> "m" || InCNA _ ,,
+                "n" -> "n" || InCNA _ ,,
+                WithAnt("\co", "n") -> "ɳ" ,,
+                WithAnt("\no", "g" "h") -> "p" ,
+                "p" -> "p" || InCNA _ ,,
+                "q" -> "k" || InCNA _ ,,
+                "r" -> "ɹ" || InCNA _ ,,
+                WithAnt("\co", "r") -> "ɹ" ,,
+                WithAnt("\no", "s") -> "s" ,,
+                "s" -> "s" || InCNA _ ,,
+                WithAnt("\ho", "s") -> "z" ,,
+                WithAnt("\ho", "s" "s") -> "z" ,,
+                "t" -> "t" || InCNA _ ,,
+                WithAnt("\co", "t") -> "ɾ" ,,
+                WithAnt("\co", "t" "h") -> "t" "θ" ,,
+                "v" -> "v" || InCNA _ ,,
+                WithAnt("\no", "v") -> "f" ,,
+                WithAnt("\ho", "w") -> "v" ,,
+                "w" -> "w" || InCNA _ ,,
+                WithAnt("\co", "w") -> "ʍ" ,,
+                WithAnt("\co", "w" "h") -> "ʍ" ,,
+                "x" -> "g" "z" || InCNA _ STVR ,,
+                WithAnt("\vo", "x") -> "g" "z" ,,
+                "x" -> "k" "s" || InCNA _ \STVR ,,
+                WithAnt("\no", "x") -> "k" "s" ,,
+                WithAnt("\co", "x") -> "z" ,,
+                "y" -> "j" || InCNA _ ,,
+                "z" -> "z" || InCNA _ ,,
+                WithAnt("\co", "z") -> "t" "s" ,,
+                WithAnt("\no", "z") -> "s";
 
+define Phase310 DecideS .o. IPACons;
 

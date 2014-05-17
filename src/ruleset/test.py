@@ -79,7 +79,7 @@ phase37_testcases = {
     r"high" : r"#|h,@'*+i",
     r"night" : r"#|n,@'*+i,#|t",
     r"toe" : r"#|t,@'*+o,@_%+e",
-    r"giant" : r"#|g,@'*+i,@_%+a,#:nt",
+    r"giant" : r"#|\hvo{g},@'*+i,@_%+a,#:nt",
     r"po\iot{e}t" : r"#|p,@'*+o,@_%+\iot{e},#|t",
     r"micro" : r"#|m,@'*+i,#|cr,@_%+o",
     r"plate" : r"#|pl,@'*+a,#|t,@_%+e",
