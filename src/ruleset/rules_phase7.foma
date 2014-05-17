@@ -18,9 +18,10 @@ source double_rule_gen.foma
 define MultReplace DoubleReplace .o. DoubleReplace .o. DoubleReplace;
 
 #Schwa when r/rs is at the end of a segment
+#NOTE: deleted upside down R from this list
 define ConsSound ["p"|"b"|"m"|"ʙ"|"ɸ"|"β"|"ɱ"|"ⱱ"|"f"|"v"|"ʋ"|"θ"|"ð"|"t"|"d"|"n"|"r"|"ɾ"|"s"|"z"|"ɬ"|"ɮ"
                     |"ɹ"|"l"|"ʃ"|"ʒ"|"ʈ"|"ɖ"|"ɳ"|"ɽ"|"ʂ"|"ʐ"|"ɻ"|"ɭ"|"c"|"ɟ"|"ɲ"|"ç"|"ʝ"|"j"|"ʎ"|"k"|"ɡ"
-                    |"ŋ"|"x"|"ɣ"|"ɰ"|"ʟ"|"q"|"ɢ"|"ɴ"|"ʀ"|"χ"|"ʁ"|"ħ"|"ʕ"|"ʔ"|"h"|"ɦ"|"ʍ"|"w"|"ɥ"|"ʜ"|"ɺ"|"ɧ"];
+                        |"ŋ"|"x"|"ɣ"|"ɰ"|"ʟ"|"q"|"ɢ"|"ɴ"|"ʀ"|"χ"|"ħ"|"ʕ"|"ʔ"|"h"|"ɦ"|"ʍ"|"w"|"ɥ"|"ʜ"|"ɺ"|"ɧ"];
 define VowelSound ["i"|"y"|"ɨ"|"ʉ"|"ɯ"|"u"|"ɪ"|"ʏ"|"ʊ"|"e"|"ø"|"ɘ"|"ɵ"|"ɤ"|"o"|"ə"|"ɛ"|"œ"|"ɜ"|"ɞ"|"ʌ"
                     |"ɔ"|"æ"|"ɐ"|"a"|"ɶ"|"ɑ"|"ɒ"];
 define SB12 [.#.|"-"];
