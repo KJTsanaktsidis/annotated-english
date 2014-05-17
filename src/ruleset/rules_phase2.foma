@@ -110,8 +110,12 @@ define DelStressAnt             MarkStressAntDel .o. DelMarkedStressAntOpen .o. 
 define InsSecondSt2Left     [..] -> "''" || SegBoundaryHard [\"''"]* VowelUnitStartLNS _ [\"''" & \VowelUnitStartLNS]* VowelUnitStartLNS [\"''" & \VowelUnitStartLNS]* VowelUnitStartLNS "'" [\"''"]* SegBoundaryHard;
 
 #infer primary stress before these annotations
-define InsPrimaryConsAnt    [..] -> "'" \\ SegBoundaryHard [\SegBoundaryHard & \"'"]* [VowelUnitStartLNS & \[$."'"] & \[$."''"]]  _ [\VowelUnitStartLNS & \ConsUnitStartL]* ConsUnitStartL 
+define InsPrimaryConsAnt    [..] -> "'" \\ SegBoundaryHard [\SegBoundaryHard & \"'"]* [VowelUnitStartLNS]  _ [\VowelUnitStartLNS & \ConsUnitStartL & \["'"|"''"]]* ConsUnitStartL 
                                             [\VowelUnitStartLNS & \ConsUnitStartL]* ["\hvo"|"\hno"|"\svo"|"\sno"] [\SegBoundaryHard & \"'"]* SegBoundaryHard;
+
+#infer primary stress before these annotations
+#define InsPrimaryConsAnt    [..] -> "'" \\ SegBoundaryHard [\SegBoundaryHard & \"'"]* [VowelUnitStartLNS & \[$."'"] & \[$."''"]]  _ [\VowelUnitStartLNS & \ConsUnitStartL]* ConsUnitStartL 
+#                                            [\VowelUnitStartLNS & \ConsUnitStartL]* ["\hvo"|"\hno"|"\svo"|"\sno"] [\SegBoundaryHard & \"'"]* SegBoundaryHard;
 
 #Insert a "separator" to make single-sylables stressed
 define InsInitSeparator     [..] -> "->" " "|| .#. _ [\SegBoundaryHard]* .#.;

@@ -1,9 +1,20 @@
+#!/usr/bin/python3
 import re
 import subprocess
 from tempfile import NamedTemporaryFile
 import os
+import sys
+from subprocess import Popen, PIPE
 
-def speak_sampa(sampaphonemes):
+def to_sampa(phonemes):
+    sampaphonemes = []
+    for ph in phonemes:
+        with Popen(['nodejs', 'src/speak/ipa-sampa.js', 'ipa2xsampa'], stdin=PIPE, stdout=PIPE) as ipa2xsampa:
+            sampabytes = ipa2xsampa.communicate(input=ph.encode(encoding='UTF-8'))[0]
+            sampaphonemes.append(sampabytes.decode(encoding='UTF-8'))
+    return sampaphonemes
+
+def speak_svox(sampaphonemes):
     #XML escape our sampa by doing something clever
     replace_dict = {
         "\\" : "\\\\",
@@ -27,3 +38,6 @@ def speak_sampa(sampaphonemes):
     subprocess.call(['aplay', tf.name])
     
     os.unlink(tf.name)
+
+if __name__ == '__main__':
+   speak_svox(to_sampa([sys.argv[1]])) 

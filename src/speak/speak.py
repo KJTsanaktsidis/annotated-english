@@ -5,20 +5,17 @@ import subprocess
 import re
 import os
 from tempfile import NamedTemporaryFile
-from svox import speak_sampa
+from svox_speak import speak_svox, to_sampa
+from att_speak import speak_att
 #Contains the whole speaking chain!
 
 #Read string from the command line
-sentence = sys.argv[1]
+engine = sys.argv[1]
+sentence = sys.argv[2]
 words = sentence.split(" ")
 wordblock = "\n".join(words)
 phonemes = []
 trace = True
-
-#We might just want to speak
-if sys.argv[1] == '--sampa':
-    speak_sampa([sys.argv[2]])
-    sys.exit()
 
 #Open a pipe to each flookup stage sequentially
 stages = ['fst/phase3{}.fst'.format(s) for s in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']]
@@ -29,7 +26,6 @@ if trace:
 phonemes = words
 
 for stage in stages:
-    print(stage)
     with Popen(['flookup', '-w', '', '-i', '-x', stage], stdin=PIPE, stdout=PIPE) as flookup:
         
         inblock = wordblock
@@ -40,16 +36,13 @@ for stage in stages:
         phonemes.remove('')
 
         if trace:
-            print('{}:\t\t{}'.format(stage, ' :: '.join(phonemes)))
+            print('{}:\t{}'.format(stage, ' :: '.join(phonemes)))
 
-sampaphonemes = []
-
-#We have our phonemes, let's SAMPA them
-for ph in phonemes:
-    with Popen(['nodejs', 'src/speak/ipa-sampa.js', 'ipa2xsampa'], stdin=PIPE, stdout=PIPE) as ipa2xsampa:
-        sampabytes = ipa2xsampa.communicate(input=ph.encode(encoding='UTF-8'))[0]
-        sampaphonemes.append(sampabytes.decode(encoding='UTF-8'))
+sampaphonemes = to_sampa(phonemes)
 
 print('Sampa:\t\t\t {}'.format(' :: '.join(sampaphonemes)))
 
-speak_sampa(sampaphonemes)
+if engine == '--att':
+    speak_att(phonemes)
+elif engine == '--svox':
+    speak_svox(sampaphonemes)

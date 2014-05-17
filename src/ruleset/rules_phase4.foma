@@ -9,7 +9,7 @@ define EliminateAntDiphthongs \"}"* -> 0 || VowelAnt "{" ? _ "}";
 
 #First: Non-annotated, unstressed, single vowels
 define SB8 ["-"|.#.];
-define UB8 [SB8 | "#" | ",#" | "@" | "@,"];
+define UB8 [SB8 | "#" | ",#" | "@" | ",@"];
 define CM8 ["#"|",#"] [":"|"|"];
 define VM8 ["@"|",@"] ["'"|"''"|"_"] ["*"|"&"|"%"] ["!"|"+"];
 
@@ -43,12 +43,12 @@ define IPAVowel
                 "a" -> "ə" || NAUSSL _  UB8 ,,
                 "e" -> 0 || NAUSSL _ SB8 ,,
                 "e" -> 0 || NAUSSL _ CM8 AnyAnt(["d"|"s"]) ,,
-                "e" -> "ə" || NAUSSL _ \.#. & [[[CM8 ?*] - SB8] - [CM8 AnyAnt(["d"|"s"])]] ,,
+                "e" -> "ə" || NAUSSL _ [?+ - SB8 - [CM8 AnyAnt(["d"|"s"])]] ,,
                 ["i"|"y"] -> "i" || NAUSSL _ UB8 ,,
                 "o" -> "o" "ʊ" || NAUSSL _ SB8 ,,
                 "o" -> "o" "ʊ" || NAUSSL _ CM8 AnyAnt("s") ,,
                 "o" -> "o" "ʊ" || NAUSSL _ VM8 AnyAnt("e") CM8 AnyAnt("s") ,,
-                "o" -> "ə" || NAUSSL _ [?* - SB8 - [CM8 AnyAnt("s")] - [VM8 AnyAnt("e") CM8 AnyAnt("s")]] ,,
+                "o" -> "ə" || NAUSSL _ [?+ - SB8 - [CM8 AnyAnt("s")] - [VM8 AnyAnt("e") CM8 AnyAnt("s")]] ,,
                 "u" -> "ə" || NAUSSL _ UB8 ,,
                 
                 #Now we copnsider stressed or annotated words
@@ -108,11 +108,11 @@ define IPAVowel
                 WithAnt("\idp", ["a"|"e"]) -> "a" "ɪ" "ʁ" || RhoticL _ ,,
                 WithAnt("\idp", "o") -> "w" "a" "ː" || NonRhoticL _ ,,
                 WithAnt("\idp", "o") -> "w" "a" "ː" "ɹ" || RhoticL _ ,,
-                WithAnt("\idp", "u") -> "j" "ɘ" || NonRhoticL _ ,,
-                WithAnt("\idp", "u") -> "j" "ɘ" "ɹ" || RhoticL _ ,,
+                WithAnt("\idp", "u") -> "j" "ə" || NonRhoticL _ ,,
+                WithAnt("\idp", "u") -> "j" "ə" "ɹ" || RhoticL _ ,,
                 #u-diphthong
-                WithAnt("\udp", ["a"|"o"]) -> "j" "ɘ" || NonRhoticL _ ,,
-                WithAnt("\udp", ["a"|"o"]) -> "j" "ɘ" "ʁ" || RhoticL _ ,,
+                WithAnt("\udp", ["a"|"o"]) -> "j" "ə" || NonRhoticL _ ,,
+                WithAnt("\udp", ["a"|"o"]) -> "j" "ə" "ʁ" || RhoticL _ ,,
                 WithAnt("\udp", "e") -> "ɔ" "ɪ" || NonRhoticL _ ,,
                 WithAnt("\udp", "e") -> "ɔ" "ɪ" "ʁ" || RhoticL _ ,,
                 WithAnt("\udp", "u") -> "j" "ʊ" || NonRhoticL _ ,,
@@ -124,10 +124,10 @@ define IPAVowel
                 WithAnt("\clr", "i") -> "æ" || VM8 _ ,,
                 #Central
                 WithAnt("\ctr", ["a"|"u"]) -> "ɛ" || VM8 _ ,,
-                WithAnt("\ctr", "e") -> "ɘ" || VM8 _ ,,
-                WithAnt("\ctr", "i") -> "ɘ" || NonRhoticL _ ,,
+                WithAnt("\ctr", "e") -> "ə" || VM8 _ ,,
+                WithAnt("\ctr", "i") -> "ə" || NonRhoticL _ ,,
                 WithAnt("\ctr", "o") -> "ɜ" || NonRhoticL _ ,,
-                WithAnt("\ctr", ["i"|"o"]) -> "ɘ" "ɹ" || RhoticL _ ,,
+                WithAnt("\ctr", ["i"|"o"]) -> "ə" "ɹ" || RhoticL _ ,,
                 #Ioted
                 WithAnt("\iot", ?) -> "ɪ" || VM8 _ ,,
                 #Rounded
@@ -150,8 +150,8 @@ define IPAVowel
                 ["a" "e" | "e" "e"] -> "ɪ" "ʁ" || RhoticL _ ,,
                 "e" "a" -> "i" "ː" || StNonRhoticL _ ,,
                 "e" "a" -> "ɪ" "ʁ" || StRhoticL _ ,,
-                "e" "a" -> "ɪ" "ɘ" || NoStNonRhoticL _ ,,
-                "e" "a" -> "ɪ" "ɘ" "ɹ" || NoStRhoticL _ ,,
+                "e" "a" -> "ɪ" "ə" || NoStNonRhoticL _ ,,
+                "e" "a" -> "ɪ" "ə" "ɹ" || NoStRhoticL _ ,,
                 ["a" "i" | "a" "y"] -> "e" "ɪ" || NonRhoticL _ ,,
                 ["a" "i" | "a" "y"] -> "ɛ" "ʁ" || RhoticL _ ,,
                 ["e" "i" | "e" "y"] -> "e" "ɪ" || StNonRhoticL _ ,,

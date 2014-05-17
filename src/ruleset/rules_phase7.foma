@@ -30,13 +30,18 @@ define SchwaR [..] -> "ɘ" || ConsSound _ "ɹ" (["s"|"z"]) SB12;
 define DelSegMarkers "-" -> 0;
 
 #I prefer a british accent
-define AccRep  "ɹ" -> 0 || _ \VowelSound ,,
-                "ʁ" -> "ɘ" "ɹ" || _ VowelSound ,,
-                "ʁ" -> "ɘ" || _ \VowelSound ,,
-                "o" "ʊ" -> "ɘ" "ʊ";
+#This isn't being especially helpful
+#define AccRep  "ɹ" -> 0 || _ \VowelSound ,,
+#                "ʁ" -> "ə" "ɹ" || _ VowelSound ,,
+#                "ʁ" -> "ə" || _ \VowelSound ,,
+#                "o" "ʊ" -> "ə" "ʊ";
+
+#This is me just picking random sounds to make ATT TTS work
+define AccRep "ɒ" -> "ɔ";
 
 #deal with j
-define ChJ "j" -> 0 || ["r"|"l"|"ʃ"|"t" "ʃ"|"ʒ"|"d" "ʒ"] _ "u" "ː";
+define STM ["ˈ" | "ˌ"];
+define ChJ "j" -> 0 || ["r"|"l"|"ʃ"|"t" "ʃ"|"ʒ"|"d" "ʒ"] (STM) _ "u" "ː";
 
 #wrap it up
 #FOMA chokes a bit, MultReplace is a 1M FSM
