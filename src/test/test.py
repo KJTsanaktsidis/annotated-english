@@ -127,6 +127,7 @@ phase37_testcases = {
 def test(testcases, fst, name):
     successct = 0
     failct = 0
+    fst = '../../fst/' + fst
 
     for inword,outword in testcases.items():
         actualout = ''

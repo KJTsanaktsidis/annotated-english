@@ -33,3 +33,7 @@
 *.swp
 
 *.fst
+
+#sound
+*.wav
+*.amr

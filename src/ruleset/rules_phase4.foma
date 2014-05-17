@@ -62,8 +62,9 @@ define IPAVowel
                 "e" -> "ɪ" "ʁ" || NatRhoticL _ UB8,,
                 WithAnt("\nat", ["i"|"y"]) -> "a" "ɪ" || NonRhoticL _ ,,
                 WithAnt("\nat", ["i"|"y"]) -> "a" "ɪ" "ʁ" || RhoticL _ ,,
-                ["i"|"y"] -> "a" "ɪ" || NatNonRhoticL _ UB8,,
-                ["i"|"y"] -> "a" "ɪ" "ʁ" || NatRhoticL _ UB8,,
+#CHANGE: aI -> lambda-I
+                ["i"|"y"] -> "ʌ" "ɪ" || NatNonRhoticL _ UB8,,
+                ["i"|"y"] -> "ʌ" "ɪ" "ʁ" || NatRhoticL _ UB8,,
                 WithAnt("\nat", "o") -> "o" "ʊ" || NonRhoticL _ ,,
                 WithAnt("\nat", "o") -> "ɔ" "ɹ" || RhoticL _ ,,
                 "o" -> "o" "ʊ" || NatNonRhoticL _ UB8,,
