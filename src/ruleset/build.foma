@@ -10,8 +10,11 @@ source rules_phase7.foma
 set show-flags ON
 set flag-is-epsilon ON
 regex Phase31;
+save stack phase31.fst
 regex Phase32;
+save stack phase32.fst
 regex Phase33;
+save stack phase33.fst
 regex Phase34;
 save stack phase34.fst
 regex Phase35;

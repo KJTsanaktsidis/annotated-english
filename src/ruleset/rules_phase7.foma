@@ -29,10 +29,10 @@ define SchwaR [..] -> "ɘ" || ConsSound _ "ɹ" (["s"|"z"]) SB12;
 define DelSegMarkers "-" -> 0;
 
 #I prefer a british accent
-define AccRDel  "ɹ" -> 0 || _ \VowelSound;
-define AccRChV  "ʁ" -> "ɘ" "ɹ" || _ VowelSound;
-define AccRChC  "ʁ" -> "ɘ" || _ \VowelSound;
-define AccOU    "o" "ʊ" -> "ɘ" "ʊ";
+define AccRep  "ɹ" -> 0 || _ \VowelSound ,,
+                "ʁ" -> "ɘ" "ɹ" || _ VowelSound ,,
+                "ʁ" -> "ɘ" || _ \VowelSound ,,
+                "o" "ʊ" -> "ɘ" "ʊ";
 
 #deal with j
 define ChJ "j" -> 0 || ["r"|"l"|"ʃ"|"t" "ʃ"|"ʒ"|"d" "ʒ"] _ "u" "ː";
@@ -40,5 +40,5 @@ define ChJ "j" -> 0 || ["r"|"l"|"ʃ"|"t" "ʃ"|"ʒ"|"d" "ʒ"] _ "u" "ː";
 #wrap it up
 #FOMA chokes a bit, MultReplace is a 1M FSM
 define Phase312a MultReplace;
-define Phase312b SchwaR .o. AccRDel .o. AccRChV .o. AccRChC .o. AccOU .o. ChJ .o. DelSegMarkers;
+define Phase312b SchwaR .o. AccRep .o. ChJ .o. DelSegMarkers;
 define Phase312c MultReplace;

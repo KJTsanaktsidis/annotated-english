@@ -12,18 +12,29 @@ from tempfile import NamedTemporaryFile
 sentence = sys.argv[1]
 words = sentence.split(" ")
 wordblock = "\n".join(words)
-ipablock = ""
+phonemes = []
+trace = True
 
-print('Wordblock: {}\n'.format(wordblock))
+#Open a pipe to each flookup stage sequentially
+stages = ['phase3{}.fst'.format(s) for s in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']]
 
-#Open a pipe to flookup...
-with Popen(['flookup', '-w', '', '-i', '-x', 'all.fst'], stdin=PIPE, stdout=PIPE) as flookup:
-    ipablockbytes = flookup.communicate(input=wordblock.encode(encoding='UTF-8'))[0]
-    ipablock = ipablockbytes.decode(encoding='UTF-8')
+if trace:
+    print('Iniial:\t\t\t{} '.format(' :: '.join(words)))
 
-phonemes = ipablock.split("\n")
+phonemes = words
 
-print('Phonemes: {}\n'.format(phonemes))
+for stage in stages:
+    with Popen(['flookup', '-w', '', '-i', '-x', stage], stdin=PIPE, stdout=PIPE) as flookup:
+        
+        inblock = wordblock
+        
+        ipablockbytes = flookup.communicate(input=inblock.encode(encoding='UTF-8'))[0]
+        ipablock = ipablockbytes.decode(encoding='UTF-8')
+        phonemes = ipablock.split("\n")
+        phonemes.remove('')
+
+        if trace:
+            print('{}:\t\t{}'.format(stage, ' :: '.join(phonemes)))
 
 sampaphonemes = []
 
@@ -33,7 +44,7 @@ for ph in phonemes:
         sampabytes = ipa2xsampa.communicate(input=ph.encode(encoding='UTF-8'))[0]
         sampaphonemes.append(sampabytes.decode(encoding='UTF-8'))
 
-print('Sampa: {}\n'.format(sampaphonemes))
+print('Sampa:\t\t\t {}'.format(' :: '.join(sampaphonemes)))
 
 #XML escape our sampa by doing something clever
 replace_dict = {
@@ -50,9 +61,6 @@ sampa_escaped_phonemes = [sampa_escape(s) for s in sampaphonemes]
 sampa_xml_phonemes = ['<phoneme alphabet="xsampa" ph="{}" />'.format(s) for s in sampa_escaped_phonemes]
 
 xml_string = ''.join(sampa_xml_phonemes)
-
-print('XML string: {}\n'.format(xml_string))
-
 #Make a wave file with our xml tags
 tf = NamedTemporaryFile(suffix='.wav', delete=False)
 tf.close()
