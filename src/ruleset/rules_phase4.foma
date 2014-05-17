@@ -51,7 +51,7 @@ define IPAVowel
                 "o" -> "o" "ʊ" || NAUSSL _ SB8 ,,
                 "o" -> "o" "ʊ" || NAUSSL _ CM8 AnyAnt("s") ,,
                 "o" -> "o" "ʊ" || NAUSSL _ VM8 AnyAnt("e") CM8 AnyAnt("s") ,,
-                "o" -> "ə" || NAUSSL _ [?+ - SB8 - [CM8 AnyAnt("s")] - [VM8 AnyAnt("e") CM8 AnyAnt("s")]] ,,
+                "o" -> "ə" || NAUSSL _ [[UB8 ?*] - SB8 - [CM8 AnyAnt("s")] - [VM8 AnyAnt("e") CM8 AnyAnt("s")]] ,,
                 "u" -> "ə" || NAUSSL _ UB8 ,,
                 
                 #Now we copnsider stressed or annotated words

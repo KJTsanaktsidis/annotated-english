@@ -13,3 +13,6 @@ test:
 
 test-dickens:
 	xargs -0 -n 1 -d "\n" ./speak --att < testcases/dickens	
+
+test-un:
+	xargs -0 -n 1 -d "\n" ./speak --att < testcases/un
