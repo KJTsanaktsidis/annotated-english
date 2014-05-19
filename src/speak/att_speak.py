@@ -16,7 +16,7 @@ def speak_att(ipa_phonemes):
         xmlns="http://www.w3.org/2001/10/synthesis">{}</speak>""".format(markup_body).encode(encoding='UTF-8')
     token = ''
 
-    print('Writing ' + markup.decode())
+#print('Writing ' + markup.decode())
 
     with open('att_token', 'r') as f:
         token = f.read()

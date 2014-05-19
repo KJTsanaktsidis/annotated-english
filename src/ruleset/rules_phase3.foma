@@ -22,7 +22,7 @@ define StMk ["'"|"''"];
 define StVMk VMk StMk;
 define OneV ["a"|"e"|"i"|"o"|"u"|"w"|"y"];
 
-define MarkNaturalVowelGroups [..] -> "*" || StVMk _ OneV .#., #It appears at the end of a word segment
+define MarkNaturalVowelGroups [..] -> "*" || StVMk _ OneV [.#.|"-"], #It appears at the end of a word segment
                                             StVMk _ OneV ",@", #It is followed by another vowel unit
                                             StVMk _ OneV ",#" "|" Unit  ",@", #It is followed by a single consonant group followed by a vowel unit
                                             StVMk _ OneV "\natpos" "{" "}"; #It was followed by a silent GH (after which we removed it)

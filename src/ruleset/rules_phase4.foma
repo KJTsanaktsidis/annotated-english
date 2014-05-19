@@ -43,7 +43,7 @@ define IPAVowel
                 "a" -> "ə" || NAUSSL _  UB8 ,,
                 "e" -> 0 || NAUSSL _ SB8 ,,
                 "e" -> 0 || NAUSSL _ CM8 AnyAnt(["d"|"s"]) ,,
-                "e" -> "ə" || NAUSSL _ [? - ",#" - "#" - "-" - .#.] ,,
+                "e" -> "ə" || NAUSSL _ [",@"|"@"] ,,
                 "e" -> "ə" || NAUSSL _ CM8 Ant "{" [\"d"  & \"s"] ,,
                 "e" -> "ə" || NAUSSL _ CM8 [\Ant & \"d" & \"s"] ,,
 #"e" -> "ə" || NAUSSL _ [?+ - SB8 - [CM8 AnyAnt(["d"|"s"])]] ,,

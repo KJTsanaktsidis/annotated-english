@@ -31,7 +31,7 @@ def speak_svox(sampaphonemes):
     #And bundle it all up in xml tags
     sampa_xml_phonemes = ['<phoneme alphabet="xsampa" ph="{}" />'.format(s) for s in sampa_escaped_phonemes]
     
-    xml_string = ''.join(sampa_xml_phonemes)
+    xml_string = '<speed level="85">' + ''.join(sampa_xml_phonemes) + '</speed>'
     #Make a wave file with our xml tags
     tf = NamedTemporaryFile(suffix='.wav', delete=False)
     tf.close()
