@@ -37,3 +37,5 @@
 #sound
 *.wav
 *.amr
+
+*.pyc

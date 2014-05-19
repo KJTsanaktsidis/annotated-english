@@ -1,0 +1,13 @@
+define SchSimple [?+ - [CM8 AnyAnt("s")]];
+
+define SchRule [?+ - SB8 - [CM8 AnyAnt("s")] - [VM8 AnyAnt("e") CM8 AnyAnt("s")]];
+
+define OSub     "o" -> "o" "ʊ" || NAUSSL _ SB8 ,,
+                "o" -> "o" "ʊ" || NAUSSL _ CM8 AnyAnt("s") ,,
+                "o" -> "o" "ʊ" || NAUSSL _ VM8 AnyAnt("e") CM8 AnyAnt("s") ,,
+                "o" -> "ə" || NAUSSL _ \[",#"|"#"|",@"|"@"|"-"|.#.] ,,
+                "o" -> "ə" || NAUSSL _ CM8 (Ant "{") \"s" ,,
+                "o" -> "ə" || NAUSSL _ VM8 (Ant "{") \"e" ,,
+                "o" -> "ə" || NAUSSL _ VM8 AnyAnt("e") \[",#"|"#"] ,,
+                "o" -> "ə" || NAUSSL _ VM8 AnyAnt("e") CM8 \AnyAnt("s");
+#"o" -> "ə" || NAUSSL _ SchRule;

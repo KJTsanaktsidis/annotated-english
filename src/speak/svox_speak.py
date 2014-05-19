@@ -8,6 +8,8 @@ from subprocess import Popen, PIPE
 
 def to_sampa(phonemes):
     sampaphonemes = []
+    #doesn't look like svox works well with this sound
+    phonemes = [s.replace('ɔ', 'ɒ').replace('i', 'ɪ').replace('a', 'ɒ') for s in phonemes] 
     for ph in phonemes:
         with Popen(['nodejs', 'src/speak/ipa-sampa.js', 'ipa2xsampa'], stdin=PIPE, stdout=PIPE) as ipa2xsampa:
             sampabytes = ipa2xsampa.communicate(input=ph.encode(encoding='UTF-8'))[0]

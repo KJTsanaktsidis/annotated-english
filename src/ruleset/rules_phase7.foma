@@ -37,7 +37,7 @@ define DelSegMarkers "-" -> 0;
 #                "o" "ʊ" -> "ə" "ʊ";
 
 #This is me just picking random sounds to make ATT TTS work
-define AccRep "ɒ" -> "ɔ";
+define AccRep "ɒ" -> "ɔ" .o. "o" "ʊ" -> "ə" "ʊ";
 
 #deal with j
 define STM ["ˈ" | "ˌ"];

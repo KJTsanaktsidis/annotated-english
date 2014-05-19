@@ -16,3 +16,12 @@ test-dickens:
 
 test-un:
 	xargs -0 -n 1 -d "\n" ./speak --att < testcases/un
+
+test-dickens-svox:
+	xargs -0 -n 1 -d "\n" ./speak --svox < testcases/dickens
+
+test-un-svox:
+	xargs -0 -n 1 -d "\n" ./speak --svox < testcases/un
+
+test-science-svox:
+	xargs -0 -n 1 -d "\n" ./speak --svox < testcases/science

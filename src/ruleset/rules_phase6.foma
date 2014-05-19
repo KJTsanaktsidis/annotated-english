@@ -12,7 +12,7 @@ define STVR ["@"|",@"] ["'"|"''"];
 
 define Voiced  [["b"|"d"|"g"|"j"|"l"|"m"|"n"|"r"|"v"|"w"|"y"|"z"] |
                 ["β"|"ð"|"ʒ"|"ʐ"|"ʝ"|"ɣ"|"ʁ"|"ɦ"|"ɱ"|"ʙ"|"ɾ"|"ɹ"|"ɻ"|"ʎ"|"ʟ"|"G"|"N"|"R"|"ɮ"|"ⱱ"|"ʋ"|"ɳ"|"ɲ"|"ŋ"] |
-                [WithAnt(["\vo"|"\svo"|"\hvo"], ?*)]];
+                [WithAnt(["\vo"|"\svo"|"\hvo"], [\"}"]*)]];
 
 define DecideS "s" -> "\vo" "{" ... "}" || VUL _ VUR ,
                                             VUL _  Voiced,
@@ -22,11 +22,11 @@ define DecideS "s" -> "\vo" "{" ... "}" || VUL _ VUR ,
 
 define IPACons  WithAnt("\sno", \"x" ?*) -> "ʃ" ,,
                 WithAnt("\sno", "x") -> "k" "ʃ" ,,
-                WithAnt("\svo", ?+) -> "ʒ" ,,
-                WithAnt("\hno", ?+) -> "t" "ʃ" ,,
-                WithAnt("\hvo", ?+) -> "d" "ʒ" ,,
-                WithAnt("\y", ?*) -> "j" ,,
-                WithAnt("\w", ?*) -> "w" ,,
+                WithAnt("\svo", [\"}"]+) -> "ʒ" ,,
+                WithAnt("\hno", [\"}"]+) -> "t" "ʃ" ,,
+                WithAnt("\hvo", [\"}"]+) -> "d" "ʒ" ,,
+                WithAnt("\y", [\"}"]*) -> "j" ,,
+                WithAnt("\w", [\"}"]*) -> "w" ,,
                 "b" -> "b" || InCNA_ ,,
                 #not including a rule for c before e,i,y because I'm includng a rule in stage 3 to autoannotate it
                 WithAnt("\no", "c") -> "s" ,,
