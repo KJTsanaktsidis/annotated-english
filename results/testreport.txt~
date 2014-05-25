@@ -1,0 +1,167 @@
+ANNOTATED ENGLISH TEST RESULTS
+==============================
+
+This is the test report for the Annotated English processing pipeline.
+The first section consists of integration test results, verified by listening to the output through a text to speech engine
+The second section consists of the results of automated tests on a wide variety of testcases, for the earlier stages of the pipeline. 
+
+
+Annotated English Integration Test Results
+------------------------------------------
+
+A series of sentence fragments was run through the whole annotated english pipeline, and the resulting X-SAMPA played through the SVOX Pico speech synthesiser.
+This report lists the fragments used and whether or not they sound correct
+
+Fragment                                                  Pass/Fail
+------------------------------------------------------    ---------
+it wǎs the best of̬ times                                    Pass
+it wǎs the wörst of̬ times                                   Pass
+thēre wǎs a king with̬ a large jaw                           Pass
+and a queen with a plain face                               Pass
+on the throne of̬ ėngland                                    Pass
+unive̩rsal de̍clarãti̪on of̬ human rights                       Pass
+ado̩ptėd and procla̩imed by ge̍neral asse̩mbly re̍solũti̪on       Pass
+following this histo̩r̥ic act                                 Pass
+cålled upo̩n åll member co͓untries to̊ pu̍blici͈ze the text      Pass
+Nobo̍dy's questi̪oning that australo ̙pith̥ecus̭ is              Pass
+a genus̭ of̬ ho̍monids that are͓ noẁadays ėxti͓nct                Pass
+
+
+
+Annotated English Unit Test Results
+-----------------------------------
+Four of the earlier stages of the Annotated English processing pipeline were tested in an automated manner. Inputs and expected outputs were fed into a program which compared the actual pipeline output with what was expected.
+There are no unit tests for stages of the pipeline after the point at which letters are transformed into IPA phonemes, because this process is inherently subjective and depends on factors such as the English accent used.
+
+
+Input                               Expected Result                                               Pass/Fail
+----------------------------------  ------------------------------------------------------------  -----------
+
+Testing phase34.fst
+
+\w{ou}\brd{i}ja                     #\w{ou},@\brd{i},#j,@a                                        Pass
+b\iot{e}\ser{}ware                  #b,@\iot{e} -> #w,@a,#r,@e                                    Pass
+cons\pln${e}c\nat{u}tive            #c,@o,#ns,@\pln${e},#c,@\nat{u},#t,@i,#v,@e                   Pass
+science                             #s\no{c},@ie,#n\no{c},@e                                      Pass
+when                                #\co{w},@e,#n                                                 Pass
+go\sel{}ing                         #g,@o <- @i,#\co{n}                                           Pass
+b\si{u}ying                         #b,@yi,#\co{n}                                                Pass
+\idp{ey}e                           @\idp{ey}e                                                    Pass
+diph\no{th}ong                      #d,@i,#ph\no{th},@o,#\co{n}                                   Pass
+k\nat{i}w\nat{i}                    #k,@\nat{i},#w,@\nat{i}                                       Pass
+peng\se{}\w{u}in                    #p,@e,#\co{n} - #\w{u},@i,#n                                  Pass
+qu\opq{a}lity                       #kw,@\opq{a},#l,@i,#t,@y                                      Pass
+f\brd{a}s\si{t}en                   #f,@\brd{a},#s,@e,#n                                          Pass
+g\brd{u}\co{r}\brd{u}               #g,@\brd{u},#\co{r},@\brd{u}                                  Pass
+twine                               #tw,@i,#n,@e                                                  Pass
+a\ser{}way                          @a -> #w,@ay                                                  Pass
+cry                                 #cr,@y                                                        Pass
+night                               #n,@i\natpos{},#t                                             Pass
+flowing                             #fl,@owi,#\co{n}                                              Pass
+boy\sel{}fr\si{i}end                #b,@oy <- #fr,@e,#nd                                          Pass
+cyan                                #\no{c},@ya,#n                                                Pass
+gu\brd{a}tem\brd${a}la              #\co{g}w,@\brd{a},#t,@e,#m,@\brd${a},#l,@a                    Pass
+g\si{h}\nat{o}st                    #g,@\nat{o},#st                                               Pass
+\co{g}\si{u}est                     #\co{g},@e,#st                                                Pass
+de\si{b}t                           #d,@e,#t                                                      Pass
+liquor                              #l,@i,#kw,@o,#r                                               Pass
+ship\selr{}wreck                    #sh,@i,#p <<- #r,@e,#ck                                       Pass
+Phase 3.4 Grouping:                 Passed 27/27, Failed 0/27
+
+Testing phase35.fst
+
+hallow\st{e}en                      #h,@a,#ll,@ow,@\st{e}e,#n                                     Pass
+s\brd{u}pral\st{i}ng\w{u}inal       #s,@\brd{u},#pr,@a,#l,@\st{i},#\co{n}\co{g}\w{u},@i,#n,@a,#l  Pass
+lion                                #l,@i,@o,#n                                                   Pass
+higher                              #h,@i\natpos{},@e,#r                                          Pass
+science                             #s\no{c},@i,@e,#n\no{c},@e                                    Pass
+gluey                               #gl,@u,@ey                                                    Pass
+flowing                             #fl,@ow,@i,#\co{n}                                            Pass
+v\nat{e}\si{h}icle                  #v,@\nat{e},@i,#cl,@e                                         Pass
+a\ser{}way                          @a -> #w,@ay                                                  Pass
+heghit                              #h,@ei,#t                                                     Pass
+\pln{e}dinbur\opq{gh}               @\pln{e},#d,@i,#nb,@u,#r,@a                                   Pass
+night                               #n,@i\natpos{},#t                                             Pass
+\nat{o}\st{a}\no{s}i\no{s}          @\nat{o},@\st{a},#\no{s},@i,#\no{s}                           Pass
+see-ing                             #s,@ee <- @i,#\co{n}                                          Pass
+bait                                #b,@ai,#t                                                     Pass
+ha\se{}w\udp${ai}i                  #h,@a - #w,@\udp${ai},@i                                      Pass
+gluier                              #gl,@u,@i,@e,#r                                               Pass
+sh\rnd{o}e                          #sh,@\rnd{o},@e                                               Pass
+y\pln{e}ah                          #y,@\pln{e},@a                                                Pass
+f\brd{ie}ld                         #f,@\brd{ie},#ld                                              Pass
+me\udp${ow}                         #m,@e,@\udp${ow}                                              Pass
+Phase 3.5 Units:                    Passed 21/21, Failed 0/21
+
+Testing phase36.fst
+
+ma\sno{ch}\st{i}ne                  #m,@a,#\sno{ch},@'i,#n,@e                                     Pass
+\stst{o}utg\st{o}\se{}ing           @''ou,#tg,@'o-@i,#\co{n}                                      Pass
+science                             #s\no{c},@'i,@e,#n\no{c},@e                                   Pass
+r\pln$${e}pr\iot{e}senta\sno{ti}on  #r,@''\pln{e},#pr,@\iot{e},#s,@e,#nt,@'a,#\sno{ti},@o,#n      Pass
+ire\sel{}land                       @'i,#r,@e-#l,@a,#nd                                           Pass
+out\sel{}go\sel{}ing                @'ou,#t-#g,@'o-@i,#\co{n}                                     Pass
+complic\stst{a}te                   #c,@'o,#mpl,@i,#c,@''a,#t,@e                                  Pass
+ini\sno{t}ia\sno{ti}on              @i,#n,@''i,#\sno{t},@i,@'a,#\sno{ti},@o,#n                    Pass
+out\se{}go\sel{}ing                 @ou,#t-#g,@'o-@i,#\co{n}                                      Pass
+hou\no{s}e                          #h,@'ou,#\no{s},@e                                            Pass
+yo-yo                               #y,@'o-#y,@o                                                  Pass
+ag\st{o}                            @a,#g,@'o                                                     Pass
+t\pln{e}l\iot{e}v\pln{i}\svo{si}on  #t,@''\pln{e},#l,@\iot{e},#v,@'\pln{i},#\svo{si},@o,#n        Pass
+Phase 3.6 Stress:                   Passed 13/13, Failed 0/13
+
+Testing phase37.fst
+
+fat                                 #|f,@'&+a,#|t                                                 Pass
+hungry                              #|h,@'&+u,#:\co{n}\co{g}r,@_%+y                               Pass
+checking                            #:ch,@'&+e,#:ck,@_%+i,#|\co{n}                                Pass
+my                                  #|m,@'*+y                                                     Pass
+nucl\iot{e}ar                       #|n,@'*+u,#|cl,@_%+\iot{e},@_%+a,#|r                          Pass
+norm                                #|n,@'&!o,#:rm                                                Pass
+winner                              #|w,@'&+i,#:nn,@_%+e,#|r                                      Pass
+ear\sel{}ring                       @'&!ea,#|r-#|r,@_%+i,#|\co{n}                                 Pass
+far                                 #|f,@'&!a,#|r                                                 Pass
+may\si{o}r                          #|m,@'&!ay,#|r                                                Pass
+little                              #|l,@'&+i,#:ttl,@_%+e                                         Pass
+\iot{e}r\st{a}dic\nat{a}te          @_%+\iot{e},#|r,@'*+a,#|d,@_%+i,#|c,@_%+\nat{a},#|t,@_%+e     Pass
+phony                               #:ph,@'*+o,#|n,@_%+y                                          Pass
+t\si{o}u\co{gh}er                   #|t,@'&+u,#:\co{gh},@_%+e,#|r                                 Pass
+whirr                               #|\co{w},@'&!i,#:rr                                           Pass
+saffron                             #|s,@'&+a,#:ffr,@_%+o,#|n                                     Pass
+fair                                #|f,@'&!ai,#|r                                                Pass
+idle                                @'*+i,#|dl,@_%+e                                              Pass
+twenty                              #:tw,@'&+e,#:nt,@_%+y                                         Pass
+lantern                             #|l,@'&+a,#:nt,@_%+e,#:rn                                     Pass
+high                                #|h,@'*+i                                                     Pass
+first                               #|f,@'&!i,#:rst                                               Pass
+player                              #|pl,@'&+ay,@_%+e,#|r                                         Pass
+micro                               #|m,@'*+i,#|cr,@_%+o                                          Pass
+mi\co{r}\iot{a}cle                  #|m,@'&+i,#:\co{r},@_%+\iot{a},#|cl,@_%+e                     Pass
+giant                               #|\hvo{g},@'*+i,@_%+a,#:nt                                    Pass
+po\iot{e}t                          #|p,@'*+o,@_%+\iot{e},#|t                                     Pass
+her                                 #|h,@'&!e,#|r                                                 Pass
+\sno{s}ugar                         #|\sno{s},@'*+u,#|g,@_%+a,#|r                                 Pass
+temple                              #|t,@'&+e,#:mpl,@_%+e                                         Pass
+toe                                 #|t,@'*+o,@_%+e                                               Pass
+card                                #|c,@'&!a,#:rd                                                Pass
+pray\si{e}r                         #|pr,@'&!ay,#|r                                               Pass
+vague                               #|v,@'*+a,#|\co{g},@_%+e                                      Pass
+fate                                #|f,@'*+a,#|t,@_%+e                                           Pass
+err                                 @'&!e,#:rr                                                    Pass
+fairy                               #|f,@'&!ai,#|r,@_%+y                                          Pass
+carry                               #|c,@'&+a,#:rr,@_%+y                                          Pass
+pha\co{r}ynx                        #:ph,@'&+a,#:\co{r},@_%+y,#:nx                                Pass
+fir\sel{}ry                         #|f,@'&!i,#|r-#|r,@_%+y                                       Pass
+so                                  #|s,@'*+o                                                     Pass
+aqua                                @'&+a,#:kw,@_%+a                                              Pass
+laird                               #|l,@'&!ai,#:rd                                               Pass
+plate                               #|pl,@'*+a,#|t,@_%+e                                          Pass
+night                               #|n,@'*+i,#|t                                                 Pass
+able                                @'*+a,#|bl,@_%+e                                              Pass
+me                                  #|m,@'*+e                                                     Pass
+dino\no{s}aur                       #|d,@'*+i,#|n,@_%+o,#|\no{s},@_%!au,#|r                       Pass
+graphic                             #|gr,@'&+a,#:ph,@_%+i,#|c                                     Pass
+Phase 3.7 Vowel Catagorisation:     Passed 49/49, Failed 0/49
+
+------------------------------------
+Summary: Passed 110/110, Failed 0/110

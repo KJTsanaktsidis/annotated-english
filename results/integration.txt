@@ -1,0 +1,19 @@
+Annotated English Integration Test Results
+------------------------------------------
+
+A series of sentence fragments was run through the whole annotated english pipeline, and the resulting X-SAMPA played through the SVOX Pico speech synthesiser.
+This report lists the fragments used and whether or not they sound correct
+
+Fragment                                                  Pass/Fail
+------------------------------------------------------    ---------
+it wǎs the best of̬ times                                    Pass
+it wǎs the wörst of̬ times                                   Pass
+thēre wǎs a king with̬ a large jaw                           Pass
+and a queen with a plain face                               Pass
+on the throne of̬ ėngland                                    Pass
+unive̩rsal de̍clarãti̪on of̬ human rights                       Pass
+ado̩ptėd and procla̩imed by ge̍neral asse̩mbly re̍solũti̪on       Pass
+following this histo̩r̥ic act                                 Pass
+cålled upo̩n åll member co͓untries to̊ pu̍blici͈ze the text      Pass
+Nobo̍dy's questi̪oning that australo ̙pith̥ecus̭ is              Pass
+a genus̭ of̬ ho̍monids that are͓ noẁadays ėxti͓nct                Pass

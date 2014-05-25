@@ -1,0 +1,9 @@
+Annotated English Integration Test Results
+------------------------------------------
+
+A series of sentence fragments was run through the whole annotated english pipeline, and the resulting X-SAMPA played through the SVOX Pico speech synthesiser.
+This report lists the fragments used and whether or not they sound correct
+
+Fragment
+---------------------------------------
+it wǎs the best of times

@@ -91,7 +91,7 @@ define IPAVowel
                 WithAnt("\pln", ["i"|"y"]) -> "ɪ" || NonRhoticL _ ,,
                 WithAnt("\pln", ["i"|"y"]) -> "ɜ" "ɹ" || RhoticL _ ,,
                 ["i"|"y"] -> "ɪ" || PlnNonRhoticL _ ,,
-                WithAnt("\pln", "o") -> "o" "ʊ" || NonRhoticL _ ,,
+                WithAnt("\pln", "o") -> "ɒ" || NonRhoticL _ ,,
                 WithAnt("\pln", "o") -> "ɔ" "ɹ" || RhoticL _ ,,
                 "o" -> "ɒ" || PlnNonRhoticL _ UB8 ,,
                 "o" -> "ɔ" "ɹ" || PlnRhoticL _ UB8 ,,

@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 #This guy runs through an integration test suite of grouping examples
 from subprocess import Popen, PIPE
+import sys
+from tabulate import tabulate
 
 phase34_testcases = {
     r"night" : r"#n,@i\natpos{},#t",
@@ -124,9 +126,23 @@ phase37_testcases = {
     r"mi\co{r}\iot{a}cle" : r"#|m,@'&+i,#:\co{r},@_%+\iot{a},#|cl,@_%+e"
 }
 
+if len(sys.argv) == 1:
+    verbose = False
+elif sys.argv[1] == '--verbose' or sys.argv[1] == '-v':
+    verbose = True
+else:
+    verbose = False
+
+test_table = []
+
 def test(testcases, fst, name):
     successct = 0
     failct = 0
+
+    test_table.append(['','',''])
+    test_table.append(['Testing ' + fst, '', ''])
+    test_table.append(['','',''])
+
     fst = '../../fst/' + fst
 
     for inword,outword in testcases.items():
@@ -135,15 +151,38 @@ def test(testcases, fst, name):
             actualout = p.communicate(input=inword.encode(encoding='UTF-8'))[0]
         utfout = actualout.decode(encoding='UTF-8')
         trimmedout = utfout.strip('\r\n ')
+
+        test_table.append([inword, outword, 'Pass' if trimmedout == outword else 'Fail'])
+
         if trimmedout == outword:
             successct += 1
         else:
             failct += 1
-            print('Failed {} (expected ({}), got ({})'.format(inword, outword, trimmedout))
+            if not verbose:
+                print('Failed {} (expected ({}), got ({})'.format(inword, outword, trimmedout))
 
-    print('{}: Passed: {}/{}, failed: {}/{}'.format(name, successct, len(testcases), failct, len(testcases)))
+    if not verbose:
+        print('{}: Passed: {}/{}, failed: {}/{}'.format(name, successct, len(testcases), failct, len(testcases)))
+    
+    test_table.append(['{}:'.format(name),' Passed {}/{}, Failed {}/{}'.format(successct, len(testcases), failct, len(testcases)), ''])
+    return (successct, failct)
 
-test(phase34_testcases, 'phase34.fst', 'Phase 3.4 Grouping')
-test(phase35_testcases, 'phase35.fst', 'Phase 3.5 Units')
-test(phase36_testcases, 'phase36.fst', 'Phase 3.6 Stress')
-test(phase37_testcases, 'phase37.fst', 'Phase 3.7 Vowel Catagorisation')
+
+(s34, f34) = test(phase34_testcases, 'phase34.fst', 'Phase 3.4 Grouping')
+(s35, f35) = test(phase35_testcases, 'phase35.fst', 'Phase 3.5 Units')
+(s36, f36) = test(phase36_testcases, 'phase36.fst', 'Phase 3.6 Stress')
+(s37, f37) = test(phase37_testcases, 'phase37.fst', 'Phase 3.7 Vowel Catagorisation')
+
+s = s34 + s35 + s36 + s37
+f = f34 + f35 + f36 + f37
+
+if verbose:
+    print('Annotated English Unit Test Results')
+    print('-----------------------------------')
+    print()
+    
+
+    print(tabulate(test_table, headers=['Input', 'Expected Result', 'Pass/Fail']))
+    print()
+    print('------------------------------------')
+    print('Summary: Passed {}/{}, Failed {}/{}'.format(s, s+f, f, s+f))

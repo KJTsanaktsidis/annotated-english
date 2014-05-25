@@ -36,8 +36,8 @@ def speak_svox(sampaphonemes):
     tf = NamedTemporaryFile(suffix='.wav', delete=False)
     tf.close()
     #wave it up
-    subprocess.call(['pico2wave', '-w', tf.name, xml_string])
-    subprocess.call(['aplay', tf.name])
+    subprocess.call(['pico2wave', '-w', tf.name, xml_string], stdout=subprocess.DEVNULL)
+    subprocess.call(['aplay', tf.name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     
     os.unlink(tf.name)
 
